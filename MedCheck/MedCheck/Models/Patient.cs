@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedCheck.Models
 {
-    public class User : IdentityUser
+    public class Patient : MainUser
     {
     //    [Key]
     //    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -28,8 +28,6 @@ namespace MedCheck.Models
     //    public string Salt { get; set; }
 
 // public long FamilyID { get; set; }
-
-        public byte[] ProfilePicture { get; set; }
 
         public ICollection<Hospital> Hospitals { get; set; }
         public ICollection<Stats> Stats { get; set; }

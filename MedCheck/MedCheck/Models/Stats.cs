@@ -14,8 +14,8 @@ namespace MedCheck.Models
         public long StatsId { get; set; }
 
         [Required]
-        [ForeignKey(nameof(User))]
-        public long UserId { get; set; }
+        [ForeignKey(nameof(Patient))]
+        public string UserId { get; set; }
 
         [Required]
         public double Temperature { get; set; }
@@ -32,7 +32,7 @@ namespace MedCheck.Models
         [Required]
         public DateTime Date { get; set; }
 
-        public User User { get; set; }
+        public Patient Patient { get; set; }
 
     }
 }

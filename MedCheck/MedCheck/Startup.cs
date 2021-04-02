@@ -1,8 +1,10 @@
 using MedCheck.DAL;
+using MedCheck.Models;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +31,14 @@ namespace MedCheck
         {
             services.AddControllersWithViews();
 
+            services.AddIdentity<MainUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+                .AddEntityFrameworkStores<MedCheckContext>()
+                .AddDefaultTokenProviders();
+
             services.AddDbContext<MedCheckContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MedCheckConnection")));
         }
@@ -51,6 +61,7 @@ namespace MedCheck
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

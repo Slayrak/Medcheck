@@ -10,12 +10,11 @@ using System.Threading.Tasks;
 
 namespace MedCheck.DAL
 {
-    public class MedCheckContext : IdentityDbContext<User>
+    public class MedCheckContext : IdentityDbContext<MainUser>
     {
         public MedCheckContext(DbContextOptions<MedCheckContext> options)
             : base(options) { }
 
-        public DbSet<MedWorker> MedWorkers { get; set; }
 
         public DbSet<Hospital> Hospitals { get; set; }
 
@@ -29,8 +28,9 @@ namespace MedCheck.DAL
 
             modelBuilder
                 .Entity<Stats>()
-                .HasOne(stats => stats.User)
+                .HasOne(stats => stats.Patient)
                 .WithMany(user => user.Stats);
+               
         }
     }
 }

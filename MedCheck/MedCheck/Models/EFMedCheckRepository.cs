@@ -16,11 +16,9 @@ namespace MedCheck.Models
             context = ctx;
         }
 
-        public IQueryable<User> Users => context.Users;
+        public IQueryable<MainUser> MainUsers => context.Users;
 
         public IQueryable<Hospital> Hospitals => context.Hospitals;
-
-        public IQueryable<MedWorker> MedWorkers => context.MedWorkers;
 
         public IQueryable<Speciality> Specialities => context.Specialities;
 

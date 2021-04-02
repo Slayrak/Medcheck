@@ -1,0 +1,36 @@
+﻿@model MedCheck.Models.ViewModels.SignupModel
+@{
+    Layout = "_Layout";
+}
+<h2>User sign up</h2>
+<form method="post" asp-controller="Account" asp-action="Signup">
+    <div asp-validation-summary="All"></div>
+    <div>
+        <label asp-for="Name"></label><br />
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label asp-for="FamilyName"></label><br />
+        <input asp-for="FamilyName" />
+        <span asp-validation-for="FamilyName"></span>
+    </div>
+    <div>
+        <label asp-for="Email"></label><br />
+        <input asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label asp-for="Password"></label><br />
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <label asp-for="PasswordConfirm"></label><br />
+        <input asp-for="PasswordConfirm" />
+        <span asp-validation-for="PasswordConfirm"></span>
+    </div>
+    <div>
+        <input type="submit" value="Sign up" />
+    </div>
+</form>

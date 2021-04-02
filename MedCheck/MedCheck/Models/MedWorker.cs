@@ -7,28 +7,12 @@ using System.Threading.Tasks;
 
 namespace MedCheck.Models
 {
-    public class MedWorker
+    public class MedWorker : MainUser
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long MedId { get; set; }
-
-        [Required]
-        public string FullName { get; set; }
-
-        [Required]
-        public string Email { get; set; }
-
-        [Required]
-        public string Password { get; set; }
-
-        [Required]
-        public string Salt { get; set; }
-
-        public byte[] ProfilePicture { get; set; }
+        public long HospitalCode { get; set; }
 
         public ICollection<Speciality> Specialities { get; set; }
         public ICollection<Hospital> Hospitals { get; set; }
-        public ICollection<User> Users { get; set; }
+        public ICollection<Patient> Patients { get; set; }
     }
 }
