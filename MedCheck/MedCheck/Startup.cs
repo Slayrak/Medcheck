@@ -1,3 +1,4 @@
+using MedCheck.Configuration;
 using MedCheck.DAL;
 using MedCheck.Models;
 
@@ -41,6 +42,8 @@ namespace MedCheck
 
             services.AddDbContext<MedCheckContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MedCheckConnection")));
+
+            services.Configure<EmailConfig>(Configuration.GetSection("Email"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
