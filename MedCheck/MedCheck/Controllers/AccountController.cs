@@ -2,6 +2,7 @@
 using MedCheck.Models;
 using MedCheck.Models.ViewModels;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -108,8 +109,7 @@ namespace MedCheck.Controllers
                             $"Dear {user.Name} {user.FamilyName},\nHere is the link to confirm your email: {confirmationLink}",
                             user.Email);
                     // installing cookies
-                    await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Login", "Account");
+                    return Content("Check Email plz");
                 }
                 else
                 {
@@ -171,6 +171,93 @@ namespace MedCheck.Controllers
             }
 
             return View("Error");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null && await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var passwordResetLink = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+                    SendPasswordResetEmail(
+                        $"Dear {user.UserName},\nHere is the link to reset your password: {passwordResetLink}",
+                        user.Email);
+
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                return View("ForgotPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+        private void SendPasswordResetEmail(string message, string to)
+        {
+            using var mailMessage = new MailMessage(_emailConfig.Address, to)
+            {
+                Subject = "Password reset",
+                Body = message,
+            };
+
+            SendEmail(mailMessage);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (token is null || email is null)
+            {
+                ModelState.AddModelError("", "Invalid password reset token");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+
+                    if (result.Succeeded)
+                    {
+                        return View("ResetPasswordConfirmation");
+                    }
+
+                    foreach (var err in result.Errors)
+                    {
+                        ModelState.AddModelError("", err.Description);
+                    }
+
+                    return View("ResetPasswordConfirmation");
+                }
+            }
+
+            return View(model);
         }
     }
 }
