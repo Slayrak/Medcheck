@@ -1,9 +1,9 @@
-﻿@model MedCheck.Models.ViewModels.SignupModel
+﻿@model MedCheck.Models.ViewModels.MedWorkerSignupModel
 @{
     Layout = "_Layout";
 }
 <h2>User sign up</h2>
-<form method="post" asp-controller="Account" asp-action="Signup">
+<form method="post" asp-controller="Account" asp-action="MedWorkerSignup">
     <div asp-validation-summary="All"></div>
     <div>
         <label asp-for="Name"></label><br />
@@ -21,6 +21,11 @@
         <span asp-validation-for="Email"></span>
     </div>
     <div>
+        <label asp-for="HospitalCode"></label><br />
+        <input asp-for="HospitalCode" />
+        <span asp-validation-for="HospitalCode"></span>
+    </div>
+    <div>
         <label asp-for="Password"></label><br />
         <input asp-for="Password" />
         <span asp-validation-for="Password"></span>
@@ -33,5 +38,4 @@
     <div>
         <input type="submit" value="Sign up" />
     </div>
-    <a asp-controller="Account" asp-action="MedWorkerSignUp">Sign up as a doctor</a>
 </form>

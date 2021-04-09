@@ -36,9 +36,15 @@ namespace MedCheck
             {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireNonAlphanumeric = false;
+                options.SignIn.RequireConfirmedAccount = true;
             })
                 .AddEntityFrameworkStores<MedCheckContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddRoles<IdentityRole>();
+
+            services.AddAuthorization(options =>
+            options.AddPolicy("admin",
+                policy => policy.RequireClaim("Manager")));
 
             services.AddDbContext<MedCheckContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MedCheckConnection")));

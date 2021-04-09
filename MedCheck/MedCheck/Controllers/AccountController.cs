@@ -1,10 +1,12 @@
 ﻿using MedCheck.Configuration;
+using MedCheck.DAL;
 using MedCheck.Models;
 using MedCheck.Models.ViewModels;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 
 using System;
@@ -21,16 +23,18 @@ namespace MedCheck.Controllers
         private readonly UserManager<MainUser> _userManager;
         private readonly SignInManager<MainUser> _signInManager;
         private readonly EmailConfig _emailConfig;
+        private readonly MedCheckContext _context;
 
-        public AccountController(UserManager<MainUser> userManager, SignInManager<MainUser> signInManager, IOptions<EmailConfig> opts)
+        public AccountController(UserManager<MainUser> userManager, SignInManager<MainUser> signInManager, IOptions<EmailConfig> opts, MedCheckContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailConfig = opts.Value;
+            _context = context;
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl = "/Account/Signup")
+        public IActionResult Login(string returnUrl = null)
         {
             return View(new LoginModel { ReturnUrl = returnUrl });
         }
@@ -64,7 +68,19 @@ namespace MedCheck.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("Index", "Home");
+                            if(await _userManager.IsInRoleAsync(user, "Patient"))
+                            {
+                                return RedirectToAction("Index", "Home");
+                            }
+                            else if(await _userManager.IsInRoleAsync(user, "Med Worker"))
+                            {
+                                return RedirectToAction("Index", "Home");
+                            }
+                            else if(await _userManager.IsInRoleAsync(user, "admin"))
+                            {
+                                return RedirectToAction("Index", "Roles");
+                            }
+                            
                         }
                     }
                     else
@@ -96,9 +112,10 @@ namespace MedCheck.Controllers
         {
             if (ModelState.IsValid)
             {
-                MainUser user = new MainUser { Name = model.Name, FamilyName = model.FamilyName, Email = model.Email, UserName = model.Email };
+                Patient user = new Patient { Name = model.Name, FamilyName = model.FamilyName, Email = model.Email, UserName = model.Email };
                 // add user
                 var result = await _userManager.CreateAsync(user, model.Password);
+                await _userManager.AddToRolesAsync(user, new List<string> { "Patient" });
                 if (result.Succeeded)
                 {
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -259,5 +276,101 @@ namespace MedCheck.Controllers
 
             return View(model);
         }
+
+
+        [HttpGet]
+        public IActionResult MedWorkerSignup()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> MedWorkerSignup(MedWorkerSignupModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                MedWorker user = new MedWorker { Name = model.Name, FamilyName = model.FamilyName, Email = model.Email, UserName = model.Email, HospitalCode = model.HospitalCode };
+                // add user
+                var result = await _userManager.CreateAsync(user, model.Password);
+                await _userManager.AddToRolesAsync(user, new List<string> { "Med Worker" });
+                if (result.Succeeded)
+                {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token }, Request.Scheme);
+
+
+                    SendEmailConfirmationEmail(
+                            $"Dear {user.Name} {user.FamilyName},\nHere is the link to confirm your email: {confirmationLink}",
+                            user.Email);
+                    // installing cookies
+                    return Content("Check Email plz");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            return View(model);
+        }
+
+        //[HttpGet]
+        //public IActionResult MedWorkerLogin(string returnUrl = "/Account/Signup")
+        //{
+        //    return View(new MedWorkerLoginModel { ReturnUrl = returnUrl });
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> MedWorkerLogin(MedWorkerLoginModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        MainUser user = await _userManager.FindByNameAsync(model.Email);
+
+        //        if (user != null)
+        //        {
+        //            if (!await _userManager.IsEmailConfirmedAsync(user))
+        //            {
+        //                ModelState.AddModelError(string.Empty, "You did not verify email");
+        //                return View(model);
+        //            }
+
+        //            await _signInManager.SignOutAsync();
+
+        //            var MyFirstQuery = _context.Hospitals.Where(x => x.SecretCode == model.HospitalCode);
+
+        //            if (!_context.Hospitals.Any(u => u.SecretCode == model.HospitalCode))
+        //            {
+        //                ModelState.AddModelError("", "Wrong password or email");
+
+        //            }
+        //            else
+        //            {
+        //                var result =
+        //                    await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+        //                if (result.Succeeded)
+        //                {
+        //                    // check if url belongs to app
+        //                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+        //                    {
+        //                        return Redirect(model.ReturnUrl);
+        //                    }
+        //                    else
+        //                    {
+        //                        return RedirectToAction("Index", "Home");
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    ModelState.AddModelError("", "Wrong password or email");
+        //                }
+        //            }
+        //        }
+        //    }
+        //    ModelState.AddModelError("", "Invalid name or password");
+        //    return View(model);
+        //}
     }
 }
