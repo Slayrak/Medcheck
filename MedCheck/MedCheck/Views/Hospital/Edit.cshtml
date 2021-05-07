@@ -1,5 +1,62 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MedCheck.Models.Hospital
 @{
+    Layout = "_Layout";
 }
+
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*<p>@User.Identity.Name</p>
+
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <input type="submit" value="Log out" />
+            </form>*@
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="dropdown-item small" asp-action="Logout" asp-controller="Account" type="submit" value="Log out" />
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-dark btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-dark btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+<h2>Edit @Model.Name</h2>
+<form asp-action="Edit" method="post" asp-route-HospitalId="@Model.HospitalId">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Name"></label><br />
+        <input asp-for="Name" value="@Model.Name" />
+    </div>
+    <div>
+        <label asp-for="City"></label><br />
+        <input asp-for="City" value="@Model.City" />
+    </div>
+    <div>
+        <label asp-for="District"></label><br />
+        <input asp-for="District" value="@Model.District" />
+    </div>
+
+    <div>
+        <label asp-for="Street"></label><br />
+        <input asp-for="Street" value="@Model.Street" />
+    </div>
+    <div>
+        <label asp-for="SecretCode"></label><br />
+        <input asp-for="SecretCode" value="@Model.SecretCode" />
+    </div>
+    <div>
+        <input type="submit" value="Save" />
+    </div>
+</form>

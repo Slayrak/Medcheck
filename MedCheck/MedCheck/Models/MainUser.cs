@@ -11,6 +11,7 @@ namespace MedCheck.Models
     {
         public string Name { get; set; }
         public string FamilyName { get; set; }
+        public DateTime BirthDate { get; set; }
 
         public byte[] ProfilePicture { get; set; }
     }

@@ -2,6 +2,11 @@
 @{
     Layout = "_Layout";
 }
+
+@section status {
+        <a class="btn btn-outline-dark btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+}
+
 <h2>User sign up</h2>
 <form method="post" asp-controller="Account" asp-action="Signup">
     <div asp-validation-summary="All"></div>
