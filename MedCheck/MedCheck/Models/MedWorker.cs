@@ -10,9 +10,11 @@ namespace MedCheck.Models
     public class MedWorker : MainUser
     {
         public string HospitalCode { get; set; }
+        public int Price { get; set; }
 
         public ICollection<Speciality> Specialities { get; set; }
         public ICollection<Hospital> Hospitals { get; set; }
         public ICollection<Patient> Patients { get; set; }
+        public ICollection<Prescription> Prescription { get; set; }
     }
 }

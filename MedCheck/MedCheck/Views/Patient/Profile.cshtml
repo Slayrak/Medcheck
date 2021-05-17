@@ -1,8 +1,13 @@
-﻿@model Patient 
+﻿@model MedCheck.Models.ViewModels.PatientViewModel
 
 @{
     Layout = "_Layout";
 }
+
+@{ 
+    ViewBag.GraphType = "Temperature";
+}
+
 @section status {
     @if (User.Identity.IsAuthenticated)
     {
@@ -17,7 +22,7 @@
                 <span class="caret"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
+                <a class="dropdown-item small" asp-action="Profile" asp-controller="Patient">Profile</a>
                 <div class="dropdown-divider"></div>
                 <form method="post" asp-controller="Account" asp-action="Logout">
                     <input class="dropdown-item small" asp-action="Logout" asp-controller="Account" type="submit" value="Log out" />
@@ -34,30 +39,51 @@
 
 <div class="row" style="height:600px; background-color: rgba(255,0,0,0.1);">
     <div class="d-inline col-12">
-        <div class="media" style="width:auto">
+        <div class="media d-flex" @*style="flex-wrap:wrap"*@>
             <img class="ml-1 mr-2 border border-dark" style="width:150px; height:150px" src=".../64x64" alt="Generic placeholder image">
-            <div class="media-body col-2">
-                <p>@Model.Name</p>
-                <p>@Model.FamilyName</p>
-                <p>@Model.Email</p>
+            <div class="media-body col-3">
+                <p>@Model.patient.Name</p>
+                <p>@Model.patient.FamilyName</p>
+                <p>@Model.patient.Email</p>
             </div>
 
-            <div class="btn-group offset-7" role="group" aria-label="Family and Edit">
+            <div class="container col-7 d-flex h-100" style="flex-wrap:wrap">
+                @*<div class="row justify-content-end">
+            <div class="btn-group col-4" role="group" aria-label="Family and Edit">
                 <button type="button" class="btn btn-light border border-dark">Family</button>
                 <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#showmodal">Edit Profile</button>
             </div>
+        </div>*@
+
+                <div class="container row justify-content-end mb-0 h-50">
+                    <div class="btn-group justify-content-end col-12" role="group" aria-label="Family and Edit" @*style="position:absolute; top:60px botto"*@ id="StatsButtonGroup">
+                        <button type="button" class="btn btn-light border border-dark col-2">Family</button>
+                        <button type="button" class="btn btn-light border border-dark col-2" data-toggle="modal" data-target="#showmodal">Edit Profile</button>
+                    </div>
+                </div>
 
 
-            <div id="showmodal" class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        @{
-                            Html.RenderPartial("EditPartial");
-                        }
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-            @*<div class="col-1 ml-1 mr-2 d-inline">
+
+                <div id="showmodal" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            @{
+                                Html.RenderPartial("EditPartial", Model);
+                            }
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+
+                <div id="addStats" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            @{
+                                Html.RenderPartial("StatsEntry", Model.sevm);
+                            }
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+                @*<div class="col-1 ml-1 mr-2 d-inline">
             <button type="button" class="btn btn-light border border-dark">Family</button>
         </div>
         <div class="ml-2 d-inline">
@@ -67,21 +93,48 @@
         <div class="ml-2 d-inline offset-2">
             <button type="button" style="width: 50px" class="btn btn-light border border-dark">Edit</button>
         </div>*@
+                <div class="container row align-items-end mb-0 h-75 d-inline-block mt-5">
+                    <div class="btn-group align-items-end col-7" role="group" aria-label="Basic example" @*style="position:absolute; top:60px botto"*@ id="StatsButtonGroup">
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1" id="temp">Temperature</button>
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1" id="pressure">Pressure</button>
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1" id="oxygen">Oxygen Level</button>
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1" id="pulse">Pulse</button>
+                    </div>
+                </div>
 
-
-            <div class="btn-group offset-4" role="group" aria-label="Basic example" style="position:absolute; top:60px">
-                <button type="button" class="btn btn-light btn-outline-dark mr-1">Left</button>
-                <button type="button" class="btn btn-light btn-outline-dark mr-1">Middle</button>
-                <button type="button" class="btn btn-light btn-outline-dark mr-1">Right</button>
-                <button type="button" class="btn btn-light btn-outline-dark mr-1">Right</button>
             </div>
 
-            <div class="col-7 border border-dark offset-4" style="height:300px; display:block; position: absolute; top:100px">
+            
 
+            
+        </div>
+
+        <div class="container col-12 d-inline">
+            <div class="row">
+                <div class="border border-dark mt-1 col-3">
+                    <div class="btn-group" role="group" aria-label="Basic example" style="">
+                        <button type="button" class="btn btn-light btn-outline-dark">Notify a doctor</button>
+                        <button type="button" class="btn btn-light btn-outline-dark">Make an appointment</button>
+                    </div>
+                    <div class="border border-dark mt-1 col-12">
+                        <button type="button" class="btn btn-light btn-outline-dark col-5">EPC</button>
+                    </div>
+                </div>
+
+                <div id="graphsHere" class="col-7  ml-3 border border-dark @*offset-4*@ h-50">
+                    @await Html.PartialAsync("~/Views/Patient/Graphs/PatientGraphs.cshtml", (string)ViewBag.GraphType)
+                    @*<div id="test"></div>*@
+                </div>
             </div>
         </div>
 
-        <div class="border border-dark ml-1 mt-1 col-3">
+        <div class="row">
+            <div class="border border-dark col-1 mt-1 offset-9 justify-content-start">
+                <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#addStats">Add record</button>
+            </div>
+        </div>
+        
+        @*<div class="border border-dark ml-1 mt-1 col-3">
             <div class="btn-group" role="group" aria-label="Basic example" style="">
                 <button type="button" class="btn btn-light btn-outline-dark">Notify a doctor</button>
                 <button type="button" class="btn btn-light btn-outline-dark">Make an appointment</button>
@@ -91,7 +144,7 @@
             <button type="button" class="btn btn-light btn-outline-dark">EPC</button>
         </div>
 
-        <div class="border border-dark ml-1 mt-5 col-3">
+        <div class="border border-dark ml-1 mt-5 mb-2 col-3">
             Extras:
             <div class="w-100"></div>
             <div class="justify-content-start">
@@ -101,17 +154,90 @@
                 </div>
             </div>
         </div>
-    </div> 
+
+        <div class="border border-dark col-1 mt-5 offset-11 justify-content-start">
+            <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#addStats">Add record</button>
+        </div>*@
+
+    </div>
 </div>
 
 @*<div class="media" style="width: 300px; height: 300px;">
-    <img class="mr-3" src=".../64x64" alt="Generic placeholder image">
-    <div class="media-body">
-        <h5 class="mt-0">Media heading</h5>
-        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-    </div>
-</div>*@
+        <img class="mr-3" src=".../64x64" alt="Generic placeholder image">
+        <div class="media-body">
+            <h5 class="mt-0">Media heading</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+        </div>
+    </div>*@
 
 @*<div class="row" style="height: 100px; background-color: rgba(255,0,0,0.1);">
-    <div class="mh-100" style="width: 100px; height: 200px; background-color: rgba(0,0,255,0.1);">Max-height 100%</div>
-</div>*@
+        <div class="mh-100" style="width: 100px; height: 200px; background-color: rgba(0,0,255,0.1);">Max-height 100%</div>
+    </div>*@
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+    $("#StatsButtonGroup button").click(function () {
+        var data = $(this).text();
+        if (data == "Temperature") {
+            @ViewBag.GraphType = "Temperature";
+
+            $.ajax({
+                url: '@Url.Action("GetGraph", "Patient")',
+                type: 'POST',
+                data: { graphType: '@ViewBag.GraphType' },
+                success: function (partialView) {
+                    $('#graphsHere').html(partialView);
+                    $('#graphsHere').show();
+                }
+            });
+            @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
+        }
+        else if (data == "Pressure") {
+            @ViewBag.GraphType = "Pressure";
+            $.ajax({
+                url: '@Url.Action("GetGraph", "Patient")',
+                type: 'POST',
+                data: { graphType: '@ViewBag.GraphType' },
+                success: function (partialView) {
+                    $('#graphsHere').html(partialView);
+                    $('#graphsHere').show();
+                }
+            });
+            @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
+        }
+        else if (data == "Oxygen Level") {
+            @ViewBag.GraphType = "Oxygen";
+
+            $.ajax({
+                url: '@Url.Action("GetGraph", "Patient")',
+                type: 'POST',
+                data: { graphType: '@ViewBag.GraphType' },
+                success: function (partialView) {
+                    $('#graphsHere').html(partialView);
+                    $('#graphsHere').show();
+                }
+            });
+            @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
+        }
+        else if (data == "Pulse") {
+            @ViewBag.GraphType = "Pulse";
+
+            $.ajax({
+                url: '@Url.Action("GetGraph", "Patient")',
+                type: 'POST',
+                data: { graphType: '@ViewBag.GraphType' },
+                success: function (partialView) {
+                    $('#graphsHere').html(partialView);
+                    $('#graphsHere').show();
+                }
+            });
+            @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
+            @*$('#test').text(@ViewBag.GraphType)*@
+        }
+
+    })
+
+
+
+</script>

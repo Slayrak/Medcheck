@@ -23,5 +23,8 @@ namespace MedCheck.Models
         public IQueryable<Speciality> Specialities => context.Specialities;
 
         public IQueryable<Stats> Stats => context.Stats;
+
+        public IQueryable<Prescription> Prescriptions => context.Prescriptions;
+
     }
 }

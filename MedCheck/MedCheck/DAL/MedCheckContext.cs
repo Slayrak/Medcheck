@@ -22,6 +22,8 @@ namespace MedCheck.DAL
 
         public DbSet<Speciality> Specialities { get; set; }
 
+        public DbSet<Prescription> Prescriptions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

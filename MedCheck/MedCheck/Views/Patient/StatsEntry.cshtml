@@ -1,0 +1,48 @@
+﻿@model MedCheck.Models.ViewModels.StatsEntryViewModel
+
+
+<div class="modal-header">
+    <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+</div>
+<div class="modal-body">
+    <form asp-action="AddRecord" asp-controller="Patient" method="post">
+        <div class="form-group">
+            <div class="row justify-content-center">
+                <label class="col-lg-3 text-center">Temperature:</label>
+                <div class="col-7" align="center">
+                    <input class="form-control w-100" asp-for="Temperature" min="34.0" max="43.0" step="0.1" type="number" value=36.6>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row justify-content-center">
+                <label class="col-lg-3 text-center">Blood Pressure:</label>
+                <div class="col-7" align="center">
+                    <input class="form-control w-100" asp-for="Pressure" min="0.0" max="300.0" type="number" value=100>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row justify-content-center">
+                <label class="col-lg-3 text-center">Pulse:</label>
+                <div class="col-7" align="center">
+                    <input class="form-control w-100" asp-for="Pulse" type="number" min="0.0" max="200.0" value=100>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row justify-content-center">
+                <label class="col-lg-3 text-center">Oxygen level:</label>
+                <div class="col-7" align="center">
+                    <input class="form-control w-100" asp-for="OxygenLevel" type="number" min="0.0" max="100.0" step="0.1" value=100>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" data-save="modal" id="save">Save</button>
+        </div>
+    </form>
+</div>
+

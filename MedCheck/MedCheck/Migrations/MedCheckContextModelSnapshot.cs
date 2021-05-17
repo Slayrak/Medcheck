@@ -49,6 +49,9 @@ namespace MedCheck.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsGovernment")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -56,8 +59,8 @@ namespace MedCheck.Migrations
                     b.Property<string>("PatientId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecretCode")
                         .IsRequired()
@@ -129,8 +132,8 @@ namespace MedCheck.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -155,6 +158,31 @@ namespace MedCheck.Migrations
                     b.ToTable("AspNetUsers");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("MainUser");
+                });
+
+            modelBuilder.Entity("MedCheck.Models.Prescription", b =>
+                {
+                    b.Property<long>("PrescriptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("MedWorkerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PatientId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PrescriptionText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PrescriptionId");
+
+                    b.HasIndex("MedWorkerId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Prescriptions");
                 });
 
             modelBuilder.Entity("MedCheck.Models.Speciality", b =>
@@ -374,6 +402,9 @@ namespace MedCheck.Migrations
                     b.Property<string>("HospitalCode")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
                     b.HasDiscriminator().HasValue("MedWorker");
                 });
 
@@ -404,6 +435,21 @@ namespace MedCheck.Migrations
                     b.HasOne("MedCheck.Models.Patient", null)
                         .WithMany("Hospitals")
                         .HasForeignKey("PatientId");
+                });
+
+            modelBuilder.Entity("MedCheck.Models.Prescription", b =>
+                {
+                    b.HasOne("MedCheck.Models.MedWorker", "MedWorker")
+                        .WithMany("Prescription")
+                        .HasForeignKey("MedWorkerId");
+
+                    b.HasOne("MedCheck.Models.Patient", "Patient")
+                        .WithMany("Prescription")
+                        .HasForeignKey("PatientId");
+
+                    b.Navigation("MedWorker");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("MedCheck.Models.Stats", b =>
@@ -498,9 +544,16 @@ namespace MedCheck.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MedCheck.Models.MedWorker", b =>
+                {
+                    b.Navigation("Prescription");
+                });
+
             modelBuilder.Entity("MedCheck.Models.Patient", b =>
                 {
                     b.Navigation("Hospitals");
+
+                    b.Navigation("Prescription");
 
                     b.Navigation("Stats");
                 });

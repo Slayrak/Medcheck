@@ -11,5 +11,6 @@ namespace MedCheck.Models
         IQueryable<Speciality> Specialities { get; }
         IQueryable<MainUser> MainUsers { get; }
         IQueryable<Stats> Stats { get; }
+        IQueryable<Prescription> Prescriptions { get; }
     }
 }

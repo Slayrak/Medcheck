@@ -7,8 +7,7 @@ namespace MedCheck.Models.ViewModels
 {
     public class PatientViewModel
     {
-        public string Name { get; set; }
-
-        public string FamilyName { get; set; }
+        public Patient patient { get; set; }
+        public StatsEntryViewModel sevm { get; set; }
     }
 }

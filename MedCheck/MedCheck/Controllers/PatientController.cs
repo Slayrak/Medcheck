@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MedCheck.Controllers
@@ -27,32 +28,126 @@ namespace MedCheck.Controllers
 
         public async Task<IActionResult> Profile()
         {
-            MainUser user = await _userManager.GetUserAsync(User);
-            return View(user);
+            Patient user = (Patient)await _userManager.GetUserAsync(User);
+            StatsEntryViewModel stats = new StatsEntryViewModel
+            { 
+                Temperature = 0,
+                Pressure = 0,
+                Pulse = 0,
+                OxygenLevel = 0,
+            };
+
+            PatientViewModel patient = new PatientViewModel
+            {
+                patient = user,
+                sevm = stats,
+            };
+
+            return View(patient);
         }
 
         
-        public async Task<IActionResult> EditPartial()
-        {
-            MainUser user = await _userManager.GetUserAsync(User);
+        //public async Task<IActionResult> EditPartial()
+        //{
+        //    MainUser user = await _userManager.GetUserAsync(User);
 
-            return PartialView(user);
+        //    return PartialView(user);
+
+        //}
+
+        public async Task<IActionResult> StatsEntry()
+        {
+            StatsEntryViewModel stvm = new StatsEntryViewModel
+            {
+                Pulse = 0,
+                Temperature = 0,
+                Pressure = 0,
+                OxygenLevel = 0,
+            };
+
+            return PartialView(stvm);
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(MainUser user)
+        public async Task<IActionResult> UpdateProfile(PatientViewModel user)
         {
-            MainUser current = await _userManager.GetUserAsync(User);
+            Patient current = (Patient)await _userManager.GetUserAsync(User);
 
-            current.Name = user.Name;
-            current.FamilyName = user.FamilyName;
-            current.BirthDate = user.BirthDate;
+            current.Name = user.patient.Name;
+            current.FamilyName = user.patient.FamilyName;
+            current.BirthDate = user.patient.BirthDate;
 
             _context.Update(current);
             _context.SaveChanges();
 
-            return View(nameof(Profile), current);
+            user.patient = current;
+            StatsEntryViewModel stats = new StatsEntryViewModel
+            {
+                Temperature = 0,
+                Pressure = 0,
+                Pulse = 0,
+                OxygenLevel = 0,
+            };
+
+            user.sevm = stats;
+
+            return View(nameof(Profile), user);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRecord(StatsEntryViewModel stvm)
+        {
+            Patient current = (Patient) await _userManager.GetUserAsync(User);
+
+            Stats stats = new Stats
+            {
+                UserId = current.Id,
+                Date = DateTime.Now,
+                Pressure = stvm.Pressure,
+                Temperature = stvm.Temperature,
+                OxygenLevel = stvm.OxygenLevel,
+                Pulse = stvm.Pulse,
+            };
+
+            _context.Stats.Add(stats);
+            _context.SaveChanges();
+
+            StatsEntryViewModel sevm = new StatsEntryViewModel
+            {
+                Temperature = 0,
+                Pressure = 0,
+                Pulse = 0,
+                OxygenLevel = 0,
+            };
+
+
+            PatientViewModel user = new PatientViewModel
+            {
+                patient = current,
+                sevm = sevm,
+            };
+
+
+            return View(nameof(Profile), user);
+
+        }
+
+        [HttpPost]
+        public ActionResult GetGraph(string graphType)
+        {
+            return PartialView("~/Views/Patient/Graphs/PatientGraphs.cshtml", graphType);
+        }
+
+        [HttpGet]
+        public JsonResult GetSpecifiedGraph(string graphType)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var stats = new GetUserStats(_context, graphType);
+
+            var data = stats.GetGraphStats(userId);
+            return Json(data);
+        }
+
     }
 }

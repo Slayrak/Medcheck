@@ -1,0 +1,143 @@
+﻿@model String
+
+<div class="container">
+    <form action="~/Patient/GetGraph" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#graphsHere" id="form0" method="post">
+        <div class="container border border-dark mb-1">
+                <div id="currentgraph" class="border border-dark mb-1" />
+            </div>
+        @*<div id="test">@Model</div>*@
+    </form>
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', { 'packages': ['line'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+    @*function checkMe() {
+        $("#test").html(@Model);
+    };*@
+
+      function drawChart() {
+          $.get('@Url.Action("GetSpecifiedGraph", "Patient")',
+              { graphType: @Model },
+              function (jsonData) {
+              data = google.visualization.arrayToDataTable(jsonData, false);
+              var option = {
+                  title: @Model,
+              };
+                  chart = new google.charts.Line(document.getElementById('currentgraph'));
+                  chart.draw(data, option);
+
+                  google.visualization.events.addListener(chart, 'select', function (e) {
+                      var selectedItem = chart.getSelection()[0];
+                      if (selectedItem) {
+                          var value = data.getValue(selectedItem.row, 0);
+                          alert('The user selected ' + value);
+                      }
+                  });
+              })
+
+          
+      };
+
+
+
+                //function drawCardsChart() {
+                //    $.get('GetCards',
+                //        { dayNumber: 30 },
+                //        function (jsonData) {
+                //        data = google.visualization.arrayToDataTable(jsonData, false);
+                //        var option = {
+                //            title: "Cards",
+                //        };
+                //        chart = new google.charts.Line(document.getElementById('graph'));
+                //        chart.draw(data, option);
+                //    })
+                //}
+
+        //$('#Testing').on('hidden.bs.dropdown', function (e) {
+        //    var ddlvalue = $(this).val();
+        //    var txt = ($(this).text());
+        //    var x = $(event.target).text();
+        //    $('.p').text(ddlvalue);
+        //    if (x == '30 Days') {
+        //        $('#test').text('30 days');
+        //        $('#dropdownMenuButton').html('30 Days');
+        //        $.get('GetHours',
+        //            { dayNumber: 30 },
+        //            function (jsonData) {
+        //                data = google.visualization.arrayToDataTable(jsonData, false);
+        //                var option = {
+        //                    title: "Hours",
+        //                };
+        //                chart = new google.charts.Line(document.getElementById('hours'));
+        //                chart.draw(data, option);
+        //            })
+
+        //        $.get('GetAverageHours',
+        //            {dayNumber: 30},
+        //            function (jsonData) {
+        //            data = google.visualization.arrayToDataTable(jsonData, false);
+        //            var option = {
+        //                title: "Average Hours",
+        //            };
+        //            chart = new google.charts.Line(document.getElementById('averageHours'));
+        //            chart.draw(data, option);
+        //        })
+
+        //        $.get('GetCards',
+        //            { dayNumber: 30 },
+        //            function (jsonData) {
+        //            data = google.visualization.arrayToDataTable(jsonData, false);
+        //            var option = {
+        //                title: "Cards",
+        //            };
+        //            chart = new google.charts.Line(document.getElementById('cards'));
+        //            chart.draw(data, option);
+        //        })
+
+        //    }
+        //    else if (x == '7 Days') {
+        //        $('#test').text('7 days');
+        //        $('#dropdownMenuButton').html('7 Days');
+        //        $.get('GetHours',
+        //            { dayNumber: 7 },
+        //            function (jsonData) {
+        //                data = google.visualization.arrayToDataTable(jsonData, false);
+        //                var option = {
+        //                    title: "Hours",
+        //                };
+        //                chart = new google.charts.Line(document.getElementById('hours'));
+        //                chart.draw(data, option);
+        //            })
+
+        //        $.get('GetAverageHours',
+        //            { dayNumber: 7 },
+        //            function (jsonData) {
+        //                data = google.visualization.arrayToDataTable(jsonData, false);
+        //                var option = {
+        //                    title: "Average Hours",
+        //                };
+        //                chart = new google.charts.Line(document.getElementById('averageHours'));
+        //                chart.draw(data, option);
+        //            })
+
+        //        $.get('GetCards',
+        //            { dayNumber: 7 },
+        //            function (jsonData) {
+        //                data = google.visualization.arrayToDataTable(jsonData, false);
+        //                var option = {
+        //                    title: "Cards",
+        //                };
+        //                chart = new google.charts.Line(document.getElementById('cards'));
+        //                chart.draw(data, option);
+        //            })
+        //    }
+        //    //alert('alerted');
+        //    e.preventDefault();
+
+        //});
+
+</script>
