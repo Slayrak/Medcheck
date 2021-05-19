@@ -1,143 +1,129 @@
 ﻿@model String
 
-<div class="container">
-    <form action="~/Patient/GetGraph" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#graphsHere" id="form0" method="post">
-        <div class="container border border-dark mb-1">
-                <div id="currentgraph" class="border border-dark mb-1" />
+<div class="container-fluid d-inline col-12 justify-content-start p-0">
+    <form action="~/Patient/GetGraph" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#graphsHere" id="form0" method="post" class="justify-content-start d-inline container-fluid p-0">
+
+        <div class="container-fluid mb-1 d-flex col-10 p-0" style="box-sizing:border-box; height:100%; width:100%">
+            <div id="currentgraph" class="border border-dark mb-1 col-12" style="width:100%"/>
+        </div>
+            
+            <div class="btn-group-vertical btn-group-sm col-1" role="group" aria-label="Basic example" style="height:20%" id="zoomInzoomOut">
+                <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="zoomIn">+</button>
+                <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="zoomOut">-</button>
             </div>
+        @*<div class="btn-group col-2" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">+</button>
+                <button type="button" class="btn btn-secondary">-</button>
+            </div>*@
         @*<div id="test">@Model</div>*@
     </form>
+    
+    @*<div class="btn-group col-2" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-secondary">+</button>
+            <button type="button" class="btn btn-secondary">-</button>
+        </div>*@
+
 </div>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
+<script type="text/javascript" language="JavaScript">
         // Load the Visualization API and the corechart package.
-        google.charts.load('current', { 'packages': ['line'] });
+    google.charts.load('current', { 'packages': ['corechart'] });
         google.charts.setOnLoadCallback(drawChart);
 
+    $("#zoomOut").prop("disabled", true);
+    $("#zoomIn").prop("disabled", true);
+    var entries = 0;
+    var miniEntries = 0;
+    var zoom = 0;
     @*function checkMe() {
         $("#test").html(@Model);
     };*@
 
+    var currentDateOnGraph;
+
       function drawChart() {
           $.get('@Url.Action("GetSpecifiedGraph", "Patient")',
-              { graphType: @Model },
+              {
+                  graphType: @Model,
+                  zoomType: zoom,
+                  showEntries: entries
+              },
               function (jsonData) {
-              data = google.visualization.arrayToDataTable(jsonData, false);
+                  var data = google.visualization.arrayToDataTable(jsonData, false);
+                  //data.addColumn({ 'type': 'string', 'role': 'style' })
+
+                  //var i;
+                  //for (i = 0; i < data.getNumberOfRows(); i++) {
+                  //    data.setValue(i, 2, 'point { size: 18;}');
+                  //    alert('The user selected ' + data.getValue(i, 0) +" " + data.getValue(i, 1) + data.getValue(i, 2));
+                  //}
+
+                  
+
               var option = {
                   title: @Model,
+                  width: '100%',
+                  pointSize: 7,
               };
-                  chart = new google.charts.Line(document.getElementById('currentgraph'));
+                  chart = new google.visualization.LineChart(document.getElementById('currentgraph'));
                   chart.draw(data, option);
 
                   google.visualization.events.addListener(chart, 'select', function (e) {
                       var selectedItem = chart.getSelection()[0];
+
                       if (selectedItem) {
                           var value = data.getValue(selectedItem.row, 0);
+
+                          $("#zoomIn").prop("disabled", false);
+                          currentDateOnGraph = value;
                           alert('The user selected ' + value);
                       }
                   });
               })
+    };
 
-          
-      };
+    $("#zoomIn").click(function () {
+        $("#zoomOut").prop("disabled", false);
+        $("#zoomIn").prop("disabled", true);
 
+        zoom=1
 
+        $.get('@Url.Action("GetSpecifiedMiniGraph", "Patient")',
+              {
+                  graphType: @Model,
+                  zoomType: zoom,
+                  showEntries: miniEntries,
+                  graphDate: currentDateOnGraph
+              },
+              function (jsonData) {
+              data = google.visualization.arrayToDataTable(jsonData, false);
+              var option = {
+                  title: @Model,
+                  pointSize: 7
+              };
+                  chart = new google.visualization.LineChart(document.getElementById('currentgraph'));
+                  chart.draw(data, option);
 
-                //function drawCardsChart() {
-                //    $.get('GetCards',
-                //        { dayNumber: 30 },
-                //        function (jsonData) {
-                //        data = google.visualization.arrayToDataTable(jsonData, false);
-                //        var option = {
-                //            title: "Cards",
-                //        };
-                //        chart = new google.charts.Line(document.getElementById('graph'));
-                //        chart.draw(data, option);
-                //    })
-                //}
+                  //google.visualization.events.addListener(chart, 'select', function (e) {
+                  //    var selectedItem = chart.getSelection()[0];
 
-        //$('#Testing').on('hidden.bs.dropdown', function (e) {
-        //    var ddlvalue = $(this).val();
-        //    var txt = ($(this).text());
-        //    var x = $(event.target).text();
-        //    $('.p').text(ddlvalue);
-        //    if (x == '30 Days') {
-        //        $('#test').text('30 days');
-        //        $('#dropdownMenuButton').html('30 Days');
-        //        $.get('GetHours',
-        //            { dayNumber: 30 },
-        //            function (jsonData) {
-        //                data = google.visualization.arrayToDataTable(jsonData, false);
-        //                var option = {
-        //                    title: "Hours",
-        //                };
-        //                chart = new google.charts.Line(document.getElementById('hours'));
-        //                chart.draw(data, option);
-        //            })
+                  //    if (selectedItem) {
+                  //        var value = data.getValue(selectedItem.row, 0);
 
-        //        $.get('GetAverageHours',
-        //            {dayNumber: 30},
-        //            function (jsonData) {
-        //            data = google.visualization.arrayToDataTable(jsonData, false);
-        //            var option = {
-        //                title: "Average Hours",
-        //            };
-        //            chart = new google.charts.Line(document.getElementById('averageHours'));
-        //            chart.draw(data, option);
-        //        })
+                  //        currentDateOnGraph = value;
+                  //        //alert('The user selected ' + value);
+                  //    }
+                  //});
+              })
 
-        //        $.get('GetCards',
-        //            { dayNumber: 30 },
-        //            function (jsonData) {
-        //            data = google.visualization.arrayToDataTable(jsonData, false);
-        //            var option = {
-        //                title: "Cards",
-        //            };
-        //            chart = new google.charts.Line(document.getElementById('cards'));
-        //            chart.draw(data, option);
-        //        })
+    });
 
-        //    }
-        //    else if (x == '7 Days') {
-        //        $('#test').text('7 days');
-        //        $('#dropdownMenuButton').html('7 Days');
-        //        $.get('GetHours',
-        //            { dayNumber: 7 },
-        //            function (jsonData) {
-        //                data = google.visualization.arrayToDataTable(jsonData, false);
-        //                var option = {
-        //                    title: "Hours",
-        //                };
-        //                chart = new google.charts.Line(document.getElementById('hours'));
-        //                chart.draw(data, option);
-        //            })
-
-        //        $.get('GetAverageHours',
-        //            { dayNumber: 7 },
-        //            function (jsonData) {
-        //                data = google.visualization.arrayToDataTable(jsonData, false);
-        //                var option = {
-        //                    title: "Average Hours",
-        //                };
-        //                chart = new google.charts.Line(document.getElementById('averageHours'));
-        //                chart.draw(data, option);
-        //            })
-
-        //        $.get('GetCards',
-        //            { dayNumber: 7 },
-        //            function (jsonData) {
-        //                data = google.visualization.arrayToDataTable(jsonData, false);
-        //                var option = {
-        //                    title: "Cards",
-        //                };
-        //                chart = new google.charts.Line(document.getElementById('cards'));
-        //                chart.draw(data, option);
-        //            })
-        //    }
-        //    //alert('alerted');
-        //    e.preventDefault();
-
-        //});
+    $("#zoomOut").click(function () {
+        zoom = 0
+        miniEntries = 0
+        $("#zoomOut").prop("disabled", true);
+        drawChart();
+    })
 
 </script>

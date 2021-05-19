@@ -40,7 +40,7 @@
 <div class="row" style="height:600px; background-color: rgba(255,0,0,0.1);">
     <div class="d-inline col-12">
         <div class="media d-flex" @*style="flex-wrap:wrap"*@>
-            <img class="ml-1 mr-2 border border-dark" style="width:150px; height:150px" src=".../64x64" alt="Generic placeholder image">
+            <img class="ml-1 mr-2 border border-dark" style="width:150px; height:150px" src="" alt="Generic placeholder image">
             <div class="media-body col-3">
                 <p>@Model.patient.Name</p>
                 <p>@Model.patient.FamilyName</p>
@@ -56,7 +56,7 @@
         </div>*@
 
                 <div class="container row justify-content-end mb-0 h-50">
-                    <div class="btn-group justify-content-end col-12" role="group" aria-label="Family and Edit" @*style="position:absolute; top:60px botto"*@ id="StatsButtonGroup">
+                    <div class="btn-group justify-content-end col-12" role="group" aria-label="Family and Edit" @*style="position:absolute; top:60px botto"*@>
                         <button type="button" class="btn btn-light border border-dark col-2">Family</button>
                         <button type="button" class="btn btn-light border border-dark col-2" data-toggle="modal" data-target="#showmodal">Edit Profile</button>
                     </div>
@@ -110,7 +110,7 @@
         </div>
 
         <div class="container col-12 d-inline">
-            <div class="row">
+            <div class="row" style="height:50%">
                 <div class="border border-dark mt-1 col-3">
                     <div class="btn-group" role="group" aria-label="Basic example" style="">
                         <button type="button" class="btn btn-light btn-outline-dark">Notify a doctor</button>
@@ -121,8 +121,8 @@
                     </div>
                 </div>
 
-                <div id="graphsHere" class="col-7  ml-3 border border-dark @*offset-4*@ h-50">
-                    @await Html.PartialAsync("~/Views/Patient/Graphs/PatientGraphs.cshtml", (string)ViewBag.GraphType)
+                <div id="graphsHere" class="col-7 d-flex ml-3 border border-dark">
+                    @*@await Html.PartialAsync("~/Views/Patient/Graphs/PatientGraphs.cshtml", (string)ViewBag.GraphType)*@
                     @*<div id="test"></div>*@
                 </div>
             </div>
@@ -176,6 +176,8 @@
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
+
+    @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
 
     $("#StatsButtonGroup button").click(function () {
         var data = $(this).text();

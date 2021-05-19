@@ -140,12 +140,22 @@ namespace MedCheck.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetSpecifiedGraph(string graphType)
+        public JsonResult GetSpecifiedGraph(string graphType, int showEntries, string graphDate)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var stats = new GetUserStats(_context, graphType);
+            var data = stats.GetGraphStats(userId, showEntries);
+
+            return Json(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetSpecifiedMiniGraph(string graphType, int showEntries, string graphDate)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var stats = new GetUserStats(_context, graphType);
 
-            var data = stats.GetGraphStats(userId);
+            var data = stats.GetMiniGraphStats(userId, showEntries, graphDate);
             return Json(data);
         }
 
