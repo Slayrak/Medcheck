@@ -11,6 +11,7 @@ namespace MedCheck.Models
     {
         public string HospitalCode { get; set; }
         public int Price { get; set; }
+        public string Cabinet { get; set; }
 
         public ICollection<Speciality> Specialities { get; set; }
         public ICollection<Hospital> Hospitals { get; set; }

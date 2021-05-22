@@ -4,14 +4,16 @@ using MedCheck.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MedCheck.Migrations
 {
     [DbContext(typeof(MedCheckContext))]
-    partial class MedCheckContextModelSnapshot : ModelSnapshot
+    [Migration("20210521210047_PrescriptionFix")]
+    partial class PrescriptionFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -435,9 +437,6 @@ namespace MedCheck.Migrations
             modelBuilder.Entity("MedCheck.Models.MedWorker", b =>
                 {
                     b.HasBaseType("MedCheck.Models.MainUser");
-
-                    b.Property<string>("Cabinet")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HospitalCode")
                         .HasColumnType("nvarchar(max)");

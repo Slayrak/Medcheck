@@ -4,7 +4,7 @@
     Layout = "_Layout";
 }
 
-@{ 
+@{
     ViewBag.GraphType = "Temperature";
 }
 
@@ -58,7 +58,6 @@
     #imageContainer:hover #imgButtonGroup {
         opacity: 1;
     }
-
 </style>
 
 <div class="row" style="height:600px; background-color: rgba(255,0,0,0.1);">
@@ -75,7 +74,7 @@
 
 
                     @*<input class="button" id="imageButtonClick" type="submit" value="Upload" />
-                    <input class="button" id="discardImageButtonClick" type="submit" value="Upload" />*@
+                        <input class="button" id="discardImageButtonClick" type="submit" value="Upload" />*@
                 </form>
             </div>
 
@@ -87,11 +86,11 @@
 
             <div class="container col-7 d-flex h-100" style="flex-wrap:wrap">
                 @*<div class="row justify-content-end">
-                    <div class="btn-group col-4" role="group" aria-label="Family and Edit">
-                        <button type="button" class="btn btn-light border border-dark">Family</button>
-                        <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#showmodal">Edit Profile</button>
-                    </div>
-                </div>*@
+                        <div class="btn-group col-4" role="group" aria-label="Family and Edit">
+                            <button type="button" class="btn btn-light border border-dark">Family</button>
+                            <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#showmodal">Edit Profile</button>
+                        </div>
+                    </div>*@
 
                 <div class="container row justify-content-end mb-0 h-50">
                     <div class="btn-group justify-content-end col-12" role="group" aria-label="Family and Edit" @*style="position:absolute; top:60px botto"*@>
@@ -116,15 +115,15 @@
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->
                 @*<div class="col-1 ml-1 mr-2 d-inline">
-                    <button type="button" class="btn btn-light border border-dark">Family</button>
-                </div>
-                <div class="ml-2 d-inline">
-                    <button type="button" style="width: 250px" class="btn btn-light border border-dark">+ Family member</button>
-                </div>
+                        <button type="button" class="btn btn-light border border-dark">Family</button>
+                    </div>
+                    <div class="ml-2 d-inline">
+                        <button type="button" style="width: 250px" class="btn btn-light border border-dark">+ Family member</button>
+                    </div>
 
-                <div class="ml-2 d-inline offset-2">
-                    <button type="button" style="width: 50px" class="btn btn-light border border-dark">Edit</button>
-                </div>*@
+                    <div class="ml-2 d-inline offset-2">
+                        <button type="button" style="width: 50px" class="btn btn-light border border-dark">Edit</button>
+                    </div>*@
                 <div class="container row align-items-end mb-0 h-75 d-inline-block mt-5">
                     <div class="btn-group align-items-end col-7" role="group" aria-label="Basic example" @*style="position:absolute; top:60px botto"*@ id="StatsButtonGroup">
                         <button type="button" class="btn btn-light btn-outline-dark mr-1" id="temp">Temperature</button>
@@ -181,29 +180,29 @@
         </div>
 
         @*<div class="border border-dark ml-1 mt-1 col-3">
-            <div class="btn-group" role="group" aria-label="Basic example" style="">
-                <button type="button" class="btn btn-light btn-outline-dark">Notify a doctor</button>
-                <button type="button" class="btn btn-light btn-outline-dark">Make an appointment</button>
-            </div>
-        </div>
-        <div class="border border-dark ml-1 mt-1 col-1">
-            <button type="button" class="btn btn-light btn-outline-dark">EPC</button>
-        </div>
-
-        <div class="border border-dark ml-1 mt-5 mb-2 col-3">
-            Extras:
-            <div class="w-100"></div>
-            <div class="justify-content-start">
-                <div class="btn-group justify-content-around" role="group" aria-label="Extras" style="">
-                    <button type="button" class="btn btn-light btn-outline-dark mr-1">Maps</button>
-                    <button type="button" class="btn btn-light btn-outline-dark">Recipes History</button>
+                <div class="btn-group" role="group" aria-label="Basic example" style="">
+                    <button type="button" class="btn btn-light btn-outline-dark">Notify a doctor</button>
+                    <button type="button" class="btn btn-light btn-outline-dark">Make an appointment</button>
                 </div>
             </div>
-        </div>
+            <div class="border border-dark ml-1 mt-1 col-1">
+                <button type="button" class="btn btn-light btn-outline-dark">EPC</button>
+            </div>
 
-        <div class="border border-dark col-1 mt-5 offset-11 justify-content-start">
-            <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#addStats">Add record</button>
-        </div>*@
+            <div class="border border-dark ml-1 mt-5 mb-2 col-3">
+                Extras:
+                <div class="w-100"></div>
+                <div class="justify-content-start">
+                    <div class="btn-group justify-content-around" role="group" aria-label="Extras" style="">
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1">Maps</button>
+                        <button type="button" class="btn btn-light btn-outline-dark">Recipes History</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-dark col-1 mt-5 offset-11 justify-content-start">
+                <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#addStats">Add record</button>
+            </div>*@
 
     </div>
 </div>
@@ -273,7 +272,7 @@
                 alert("Choose file with acceptable extention")
             }
 
-            
+
         }
     });
 

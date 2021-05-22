@@ -9,6 +9,8 @@ namespace MedCheck.Models
 {
     public class MainUser : IdentityUser
     {
+        public string UserFamilyID { get; set; }
+
         public string Name { get; set; }
         public string FamilyName { get; set; }
         public DateTime BirthDate { get; set; }

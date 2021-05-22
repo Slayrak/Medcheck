@@ -4,14 +4,16 @@ using MedCheck.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MedCheck.Migrations
 {
     [DbContext(typeof(MedCheckContext))]
-    partial class MedCheckContextModelSnapshot : ModelSnapshot
+    [Migration("20210520161924_FamilyID")]
+    partial class FamilyID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,9 +143,6 @@ namespace MedCheck.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserFamilyID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -170,9 +169,6 @@ namespace MedCheck.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("MedWorkerId")
                         .HasColumnType("nvarchar(450)");
 
@@ -180,7 +176,6 @@ namespace MedCheck.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PrescriptionText")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PrescriptionId");
@@ -190,36 +185,6 @@ namespace MedCheck.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Prescriptions");
-                });
-
-            modelBuilder.Entity("MedCheck.Models.Requests", b =>
-                {
-                    b.Property<long>("RequestId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("PatientId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("RequestStatus")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SenderID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RequestId");
-
-                    b.HasIndex("PatientId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("MedCheck.Models.Speciality", b =>
@@ -436,9 +401,6 @@ namespace MedCheck.Migrations
                 {
                     b.HasBaseType("MedCheck.Models.MainUser");
 
-                    b.Property<string>("Cabinet")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("HospitalCode")
                         .HasColumnType("nvarchar(max)");
 
@@ -451,6 +413,9 @@ namespace MedCheck.Migrations
             modelBuilder.Entity("MedCheck.Models.Patient", b =>
                 {
                     b.HasBaseType("MedCheck.Models.MainUser");
+
+                    b.Property<string>("UserFamilyID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("Patient");
                 });
@@ -488,21 +453,6 @@ namespace MedCheck.Migrations
                         .HasForeignKey("PatientId");
 
                     b.Navigation("MedWorker");
-
-                    b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("MedCheck.Models.Requests", b =>
-                {
-                    b.HasOne("MedCheck.Models.Patient", null)
-                        .WithMany("Requests")
-                        .HasForeignKey("PatientId");
-
-                    b.HasOne("MedCheck.Models.MainUser", "Patient")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Patient");
                 });
@@ -609,8 +559,6 @@ namespace MedCheck.Migrations
                     b.Navigation("Hospitals");
 
                     b.Navigation("Prescription");
-
-                    b.Navigation("Requests");
 
                     b.Navigation("Stats");
                 });

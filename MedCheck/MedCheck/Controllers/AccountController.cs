@@ -126,6 +126,20 @@ namespace MedCheck.Controllers
                             $"Dear {user.Name} {user.FamilyName},\nHere is the link to confirm your email: {confirmationLink}",
                             user.Email);
                     // installing cookies
+
+                    Stats firstStats = new Stats
+                    {
+                        Date = DateTime.Now,
+                        Temperature = 36.6,
+                        Pulse = 100,
+                        Pressure = 100,
+                        OxygenLevel = 100,
+                        UserId = user.Id
+                    };
+
+                    _context.Stats.Add(firstStats);
+                    _context.SaveChanges();
+
                     return Content("Check Email plz");
                 }
                 else
