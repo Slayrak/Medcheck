@@ -4,14 +4,16 @@ using MedCheck.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MedCheck.Migrations
 {
     [DbContext(typeof(MedCheckContext))]
-    partial class MedCheckContextModelSnapshot : ModelSnapshot
+    [Migration("20210522132344_ManyToManyMedWorkerPatientRemake2")]
+    partial class ManyToManyMedWorkerPatientRemake2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,18 +196,20 @@ namespace MedCheck.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MedWorkerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PatientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PrescriptionText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PrescriptionId");
+
+                    b.HasIndex("MedWorkerId");
+
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Prescriptions");
                 });
@@ -480,6 +484,21 @@ namespace MedCheck.Migrations
                         .HasForeignKey("PatientId");
                 });
 
+            modelBuilder.Entity("MedCheck.Models.Prescription", b =>
+                {
+                    b.HasOne("MedCheck.Models.MedWorker", "MedWorker")
+                        .WithMany("Prescription")
+                        .HasForeignKey("MedWorkerId");
+
+                    b.HasOne("MedCheck.Models.Patient", "Patient")
+                        .WithMany("Prescription")
+                        .HasForeignKey("PatientId");
+
+                    b.Navigation("MedWorker");
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("MedCheck.Models.Requests", b =>
                 {
                     b.HasOne("MedCheck.Models.Patient", null)
@@ -572,9 +591,16 @@ namespace MedCheck.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MedCheck.Models.MedWorker", b =>
+                {
+                    b.Navigation("Prescription");
+                });
+
             modelBuilder.Entity("MedCheck.Models.Patient", b =>
                 {
                     b.Navigation("Hospitals");
+
+                    b.Navigation("Prescription");
 
                     b.Navigation("Requests");
 

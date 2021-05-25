@@ -1,7 +1,7 @@
-﻿@model String
+﻿@model MedCheck.Models.ViewModels.ChosenPatientGraphViewModel
 
 <div class="container-fluid d-block col-12 justify-content-start p-0">
-    <form action="~/Patient/GetGraph" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#graphsHere" id="form0" method="post" class="justify-content-start d-inline container-fluid p-0" >
+    <form action="~/MedCheck/GetGraph" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#graphsHere" id="form0" method="post" class="justify-content-start d-inline container-fluid p-0">
 
         <div class="" style="width:100%; height:100%">
             <div class="container-fluid d-flex col-10 p-0" style="height:90%; width:100%;">
@@ -13,27 +13,27 @@
                 <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="zoomOut">-</button>
             </div>
         </div>
-        
+
         <div class="" style="width:50%; margin-left:8%">
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example" style="height:5%; width:20%" id="zoomInzoomOut">
                 <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveLeft"><</button>
                 <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveRight">></button>
             </div>
         </div>
-        
+
 
         @*<div class="btn-group col-2" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-secondary">+</button>
-            <button type="button" class="btn btn-secondary">-</button>
-        </div>*@
+                <button type="button" class="btn btn-secondary">+</button>
+                <button type="button" class="btn btn-secondary">-</button>
+            </div>*@
         @*<div id="test">@Model</div>*@
     </form>
     @*<div class="row">
-        <div class="btn-group btn-group-sm col-1" role="group" aria-label="Basic example" style="height:10%" id="zoomInzoomOut">
-            <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveLeft"><</button>
-            <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveRight">></button>
-        </div>
-    </div>*@
+            <div class="btn-group btn-group-sm col-1" role="group" aria-label="Basic example" style="height:10%" id="zoomInzoomOut">
+                <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveLeft"><</button>
+                <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveRight">></button>
+            </div>
+        </div>*@
 
     @*<div class="btn-group col-2" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-secondary">+</button>
@@ -57,14 +57,16 @@
         $("#test").html(@Model);
     };*@
 
+
     var currentDateOnGraph;
 
       function drawChart() {
-          $.get('@Url.Action("GetSpecifiedGraph", "Patient")',
+          $.get('@Url.Action("GetSpecifiedGraph", "MedWorker")',
               {
-                  graphType: @Model,
+                  graphType: '@Model.graphType',
                   zoomType: zoom,
-                  showEntries: entries
+                  showEntries: entries,
+                  patId: '@Model.userID'
               },
               function (jsonData) {
                   var data = google.visualization.arrayToDataTable(jsonData, false);
@@ -89,7 +91,7 @@
                   }
 
               var option = {
-                  title: @Model,
+                  title: '@Model.graphType',
                   width: '100%',
                   pointSize: 7,
               };
@@ -114,12 +116,13 @@
     };
 
     function drawMiniChart() {
-        $.get('@Url.Action("GetSpecifiedMiniGraph", "Patient")',
+        $.get('@Url.Action("GetSpecifiedMiniGraph", "MedWorker")',
               {
-                  graphType: @Model,
+                  graphType: '@Model.graphType',
                   zoomType: zoom,
                   showEntries: miniEntries,
-                  graphDate: currentDateOnGraph
+                  graphDate: currentDateOnGraph,
+                  patId: '@Model.userID'
               },
               function (jsonData) {
                   var data = google.visualization.arrayToDataTable(jsonData, false);
@@ -138,7 +141,7 @@
 
 
               var option = {
-                  title: @Model,
+                  title: '@Model.graphType',
                   pointSize: 7
               };
                   chart = new google.visualization.LineChart(document.getElementById('currentgraph'));

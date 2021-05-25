@@ -64,25 +64,14 @@
     <div class="d-inline col-12">
         <div class="media d-flex" @*style="flex-wrap:wrap"*@>
             <div class="ml-1 mr-2 border border-dark justify-content-center align-items-start" id="imageContainer" style="width:150px; height:150px; position:relative">
-                <form asp-action="AddFile" asp-controller="MedWorker" method="post" runat="server" EncType="multipart/form-data" style="position:relative; height:100%">
-                    <img style="width:150px; height:150px;" src="@Model.medWorker.ProfilePicture" alt="Generic placeholder image" id="profileImage" onclick="pro1()" accept="image/* ">
-                    <input type="file" name="uploadedFile" style="width:0%; height:0%;" id="fileUploader" /><br>
-                    <div class="btn-group justify-content-end" role="group" aria-label="Family and Edit" id="imgButtonGroup" @*style="position:absolute; top:60px botto"*@>
-                        <input class="button btn-success border border-dark" id="imageButtonClick" type="submit" value="Upload" />
-                        <input class="button btn-danger border border-dark" type="button" id="discardImageButtonClick" value="Discard" />
-                    </div>
-
-
-                    @*<input class="button" id="imageButtonClick" type="submit" value="Upload" />
-        <input class="button" id="discardImageButtonClick" type="submit" value="Upload" />*@
-                </form>
+                    <img style="width:150px; height:150px;" src="@Model.patients[0].ProfilePicture" alt="Generic placeholder image" id="profileImage" accept="image/* ">
             </div>
 
-            @*<div class="media-body col-3">
-                <p>@Model.patient.Name</p>
-                <p>@Model.patient.FamilyName</p>
-                <p>@Model.patient.Email</p>
-            </div>*@
+            <div class="media-body col-3">
+                <p>@Model.patients[0].Name</p>
+                <p>@Model.patients[0].FamilyName</p>
+                <p>@Model.patients[0].Email</p>
+            </div>
 
             <div class="container col-7 d-flex h-100" style="flex-wrap:wrap">
                 @*<div class="row justify-content-end">
@@ -94,14 +83,14 @@
 
                 <div class="container row justify-content-end mb-0 h-50">
                     <div class="btn-group justify-content-end col-12" role="group" aria-label="Family and Edit" @*style="position:absolute; top:60px botto"*@>
-                        <button type="button" class="btn btn-light border border-dark col-2 btn-outline-dark" data-toggle="modal" data-target="#showmodal">Edit Profile</button>
+                        <button type="button" class="btn btn-light border border-dark col-2 btn-outline-dark" data-toggle="modal" data-target="#showmodal">Family</button>
                     </div>
                 </div>
 
-                <div id="showmodal" class="modal fade" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
+                <div id="showmodal" class="modal fade" tabindex="-1" role="dialog" style="margin:auto;">
+                    <div class="modal-dialog modal-xl " role="document">
                         <div class="modal-content">
-                            @await Html.PartialAsync("EditMed", Model);
+                            @await Html.PartialAsync("ChosenUserFamily", Model);
                         </div> @*/.modal-content*@ 
                     </div> @*/.modal-dialog*@ 
                 </div> @*/.modal*@ 
@@ -109,7 +98,7 @@
                 <!--<div id="addStats" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            
+                            await Html.PartialAsync("StatsEntry", Model.sevm);
                         </div>--><!-- /.modal-content -->
                     <!--</div>--><!-- /.modal-dialog -->
                 <!--</div>--><!-- /.modal -->
@@ -123,14 +112,14 @@
                     <div class="ml-2 d-inline offset-2">
                         <button type="button" style="width: 50px" class="btn btn-light border border-dark">Edit</button>
                     </div>*@
-                <!--<div class="container row align-items-end mb-0 h-75 d-inline-block mt-5">
-                    <div class="btn-group align-items-end col-7" role="group" aria-label="Basic example"--> @*style="position:absolute; top:60px botto"*@ <!--id="StatsButtonGroup">
+                <div class="container row align-items-end mb-0 h-75 d-inline-block mt-5">
+                    <div class="btn-group align-items-end col-7" role="group" aria-label="Basic example" @*style="position:absolute; top:60px botto"*@ id="StatsButtonGroup">
                         <button type="button" class="btn btn-light btn-outline-dark mr-1" id="temp">Temperature</button>
                         <button type="button" class="btn btn-light btn-outline-dark mr-1" id="pressure">Pressure</button>
                         <button type="button" class="btn btn-light btn-outline-dark mr-1" id="oxygen">Oxygen Level</button>
                         <button type="button" class="btn btn-light btn-outline-dark mr-1" id="pulse">Pulse</button>
                     </div>
-                </div>-->
+                </div>
 
             </div>
 
@@ -143,69 +132,31 @@
             <div class="row" style="height:50%">
                 <div class="mt-1 col-3">
                     <div class="btn-group" role="group" aria-label="Basic example" style="width:100%">
-                        <button type="button" class="btn btn-light btn-outline-dark" data-toggle="modal" data-target="#showpatients">Patient List</button>
+                        <button type="button" class="btn btn-light btn-outline-dark" data-toggle="modal" data-target="#writerecipe">Write prescription</button>
                         @*<div class="border border-dark mt-1" style="padding-left:0px; width:100%">
-                <div class="btn-group col-12" role="group" aria-label="Basic example" style="padding-left:0px; padding-right:0px">
-                    <button type="button" class="btn btn-light btn-outline-dark">EPC</button>
-                    <button type="button" class="btn btn-light btn-outline-dark" data-toggle="modal" data-target="#showrecipes">Recipes</button>
-                </div>*@
+            <div class="btn-group col-12" role="group" aria-label="Basic example" style="padding-left:0px; padding-right:0px">
+                <button type="button" class="btn btn-light btn-outline-dark">EPC</button>
+                <button type="button" class="btn btn-light btn-outline-dark" data-toggle="modal" data-target="#showrecipes">Recipes</button>
+            </div>*@
 
                     </div>
                 </div>
 
-                <div id="showpatients" class="modal fade" tabindex="-1" role="dialog" style="margin:auto;">
-                    <div class="modal-dialog modal-xl" role="document">
-                        <div class="modal-content">
-                            @await Html.PartialAsync("PatientList", Model);
-                        </div> @*/.modal-content*@
-                    </div> @*/.modal-dialog*@
-                </div> @*/.modal*@
-
-                <div id="graphsHere" class="col-7 d-flex ml-3 border border-dark" style="flex-wrap:wrap">
-                    <div class="justify-content-start d-flex border border-dark" style="height:20%; width:100%; margin-top:15px">
-                        <label class="col-2">Name Surname:</label>
-                        <div class="col-8 justify-content-start ">
-                            @Model.medWorker.Name @Model.medWorker.FamilyName;
-                        </div>
-                    </div>
-                    <div class="justify-content-start d-flex border border-dark" style="height:20%; width:100%">
-                        <label class="col-2">Email:</label>
-                        <div class="col-8 justify-content-start">
-                            @Model.medWorker.Email;
-                        </div>
-                    </div>
-                    <div class="justify-content-start d-flex border border-dark" style="height:20%; width:100%">
-                        <label class="col-2">Birth Date:</label>
-                        <div class="col-8 justify-content-start">
-                            @Model.medWorker.BirthDate;
-                        </div>
-                    </div>
-                    <div class="justify-content-start d-flex border border-dark" style="height:20%; width:100%">
-                        <label class="col-2">Price:</label>
-                        <div class="col-8 justify-content-start">
-                            @Model.medWorker.Price;
-                        </div>
-                    </div>
-
+                <div id="graphsHere" class="col-7 d-flex ml-3">
+                    @*@await Html.PartialAsync("~/Views/Patient/Graphs/PatientGraphs.cshtml", (string)ViewBag.GraphType)*@
+                    @*<div id="test"></div>*@
                 </div>
             </div>
         </div>
 
-        <!--<div id="showpatients" class="modal fade" tabindex="-1" role="dialog">
+        <div id="writerecipe" class="modal fade" tabindex="-1" role="dialog" style="margin:auto;">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    await Html.PartialAsync("RecipesView", Model);
-                </div>--><!-- /.modal-content -->
-            <!--</div>--><!-- /.modal-dialog -->
-        <!--</div>--><!-- /.modal -->
+                    @await Html.PartialAsync("RecipeView", Model);
+                </div> @*/.modal-content*@ 
+            </div> @*/.modal-dialog*@ 
+        </div> @*/.modal*@ 
 
-
-
-        @*<div class="row">
-            <div class="border border-dark col-1 mt-1 offset-9 justify-content-start">
-                <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#addStats">Add record</button>
-            </div>
-        </div>*@
 
         @*<div class="border border-dark ml-1 mt-1 col-3">
                 <div class="btn-group" role="group" aria-label="Basic example" style="">
@@ -256,127 +207,80 @@
     //    alert("Hello");
     //});
 
-    $("#fileUploader").css("visibility", "hidden");
-
-    function pro1() {
-        document.getElementById("fileUploader").click();
-    }
-
-    if (document.getElementById("fileUploader").files.length == 0) {
-        $("#imageButtonClick").prop("disabled", true);
-        $("#discardImageButtonClick").prop("disabled", true);
-        $("#imageButtonClick").css("visibility", "hidden");
-        $("#discardImageButtonClick").css("visibility", "hidden");
-    }
-
-    document.getElementById("fileUploader").addEventListener('change', function () {
-
-        if (document.getElementById("fileUploader").files.length == 0) {
-            $("#imageButtonClick").prop("disabled", true);
-            $("#discardImageButtonClick").prop("disabled", true);
-            $("#imageButtonClick").css("visibility", "hidden");
-            $("#discardImageButtonClick").css("visibility", "hidden");
-        } else {
-
-            //document.getElementById("profileImage").src = $("#fileUploader").val();
-
-            var input = this;
-            var url = $(this).val();
-            var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
-            if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#profileImage').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-
-                $("#imageButtonClick").prop("disabled", false);
-                $("#discardImageButtonClick").prop("disabled", false);
-                $("#imageButtonClick").css("visibility", "visible");
-                $("#discardImageButtonClick").css("visibility", "visible");
-            }
-            else {
-                alert("Choose file with acceptable extention")
-            }
-
-
-        }
-    });
-
-    $("#discardImageButtonClick").click(function () {
-        $("#imageButtonClick").prop("disabled", true);
-        $("#discardImageButtonClick").prop("disabled", true);
-        $("#imageButtonClick").css("visibility", "hidden");
-        $("#discardImageButtonClick").css("visibility", "hidden");
-        $("#fileUploader").val('');
-
-
-
-        document.getElementById("profileImage").src = "@Model.medWorker.ProfilePicture";
-    })
-
-    @*$("#StatsButtonGroup button").click(function () {
+    $("#StatsButtonGroup button").click(function () {
         var data = $(this).text();
         if (data == "Temperature") {
             @ViewBag.GraphType = "Temperature";
 
             $.ajax({
-                url: '@Url.Action("GetGraph", "Patient")',
+                url: '@Url.Action("GetGraph", "MedWorker")',
                 type: 'POST',
-                data: { graphType: '@ViewBag.GraphType' },
+                data: {
+                    graphType: "Temperature",
+                    patId: '@Model.patients[0].Id'
+                },
                 success: function (partialView) {
                     $('#graphsHere').html(partialView);
                     $('#graphsHere').show();
                 }
             });
-            $('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });
+            @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
         }
         else if (data == "Pressure") {
             @ViewBag.GraphType = "Pressure";
             $.ajax({
-                url: '@Url.Action("GetGraph", "Patient")',
+                url: '@Url.Action("GetGraph", "MedWorker")',
                 type: 'POST',
-                data: { graphType: '@ViewBag.GraphType' },
+                data: {
+                    graphType: "Pressure",
+                    patId: '@Model.patients[0].Id'
+                },
                 success: function (partialView) {
                     $('#graphsHere').html(partialView);
                     $('#graphsHere').show();
                 }
             });
-            $('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });
+            @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
         }
         else if (data == "Oxygen Level") {
             @ViewBag.GraphType = "Oxygen";
 
             $.ajax({
-                url: '@Url.Action("GetGraph", "Patient")',
+                url: "Oxygen",
                 type: 'POST',
-                data: { graphType: '@ViewBag.GraphType' },
+                data: {
+                    graphType: '@ViewBag.GraphType',
+                    patId: '@Model.patients[0].Id'
+                },
                 success: function (partialView) {
                     $('#graphsHere').html(partialView);
                     $('#graphsHere').show();
                 }
             });
-            $('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*
+            @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
         }
         else if (data == "Pulse") {
             @ViewBag.GraphType = "Pulse";
 
             $.ajax({
-                url: '@Url.Action("GetGraph", "Patient")',
+                url: '@Url.Action("GetGraph", "MedWorker")',
                 type: 'POST',
-                data: { graphType: '@ViewBag.GraphType' },
+                data: {
+                    graphType: "Pulse",
+                    patId: '@Model.patients[0].Id'
+                },
                 success: function (partialView) {
                     $('#graphsHere').html(partialView);
                     $('#graphsHere').show();
                 }
             });
-            $('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });
-            $('#test').text(@ViewBag.GraphType)
+            @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
+            @*$('#test').text(@ViewBag.GraphType)*@
         }
 
-    })*@
+    })
 
 
 
 </script>
+

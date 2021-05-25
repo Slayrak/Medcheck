@@ -70,9 +70,9 @@
                                </div>
                                @if (Model.patient.Id == Model.patient.UserFamilyID)
                                {
-                                    <button type="button" class="btn-danger mt-5 offset-5" style="height:20%; width:20%">
-                                        @Html.ActionLink("Remove", "RemoveFromFamily", "Patient", new { currentUser = Model.patient.Id, chosenUser = s.Id }, new { @style = "color:white" })
-                                    </button>
+                           <button type="button" class="btn-danger mt-5 offset-5" style="height:20%; width:20%">
+                               @Html.ActionLink("Remove", "RemoveFromFamily", "Patient", new { currentUser = Model.patient.Id, chosenUser = s.Id }, new { @style = "color:white" })
+                           </button>
                                }
 
                            </div>
@@ -108,10 +108,10 @@
                                 </div>
                                 <div class="btn-group mt-5 offset-5" role="group" aria-label="Basic example" style="height:20%">
                                     <button type="button" class="btn btn-primary">
-                                        @Html.ActionLink("Accept", "ChosenAnswer", "Patient", new { choice = true, currentUser = Model.patient.Id, chosenFamily = Model.requests[i].SenderID }, null)
+                                        @Html.ActionLink("Accept", "ChosenAnswer", "Patient", new { choice = true, currentUser = Model.patient.Id, chosenFamily = Model.requests[i].SenderID }, new { @style = "color:white" })
                                     </button>
                                     <button type="button" class="btn btn-danger">
-                                        @Html.ActionLink("Decline", "ChosenAnswer", "Patient", new { choice = false, currentUser = Model.patient.Id, chosenFamily = Model.requests[i].SenderID }, null)
+                                        @Html.ActionLink("Decline", "ChosenAnswer", "Patient", new { choice = false, currentUser = Model.patient.Id, chosenFamily = Model.requests[i].SenderID }, new { @style = "color:white" })
                                     </button>
                                 </div>
                             </div>

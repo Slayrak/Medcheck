@@ -1,0 +1,31 @@
+﻿@model MedCheck.Models.ViewModels.MedWorkerViewModel
+
+<div class="modal-header">
+    <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+</div>
+<div class="modal-body">
+    <ul style="list-style-type:none;">
+        @foreach (var human in Model.chosenFamily)
+        {
+            <li>
+                <div class="d-flex border border-dark" style="width:100%">
+                    <img style="width:10%; height:10%; margin-top:5px; margin-left:5px" src="@human.ProfilePicture" alt="Generic placeholder image" id="miniProfileImage" accept="image/* " />
+                    <div class="col-3 ml-1">
+                        <p>@human.Name</p>
+                        <p>@human.FamilyName</p>
+                        <p>@human.Email</p>
+                    </div>
+                    @*<div class="btn-group mt-5 offset-5" role="group" aria-label="Basic example" style="height:20%">
+                        <button type="button" class="btn btn-primary" id="getPatient">
+                            @Html.ActionLink("Check", "GetPatient", "MedWorker", new { currentUser = human.Id }, new { @style = "color:white" })
+                        </button>
+                    </div>*@
+                </div>
+            </li>
+        }
+    </ul>
+    <div class="modal-footer">
+        @*<button type="button" class="btn btn-primary border border-light" id="left"><</button>
+            <button type="button" class="btn btn-primary border border-light" id="right">></button>*@
+    </div>
+</div>

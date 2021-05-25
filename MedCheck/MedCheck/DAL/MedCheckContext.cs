@@ -26,6 +26,8 @@ namespace MedCheck.DAL
 
         public DbSet<Requests> Requests { get; set; }
 
+        public DbSet<MedWorkerPatient> MedWorkerPatients { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

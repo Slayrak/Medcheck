@@ -28,11 +28,17 @@ namespace MedCheck.Models
             //var testPat = context.Users.Where(x => x.Id == "ad7042bd-2b9e-4b0c-ac8d-af3a38278f0c").FirstOrDefault();
 
             var prescriptions = context.Prescriptions
-                .Where(x => x.Patient.Id == ID).ToList();
+                .Where(x => x.PatientId == ID).ToList();
+
+            var pat = context.Users.Where(x => x.Id == ID).SingleOrDefault();
 
             for (int i = 0; i < prescriptions.Count; i++)
             {
-                list.Add(new object[] { prescriptions[i].MedWorker.Name + " " + prescriptions[i].MedWorker.FamilyName, prescriptions[i].MedWorker.Email, prescriptions[i].Patient.Email, prescriptions[i].Date, prescriptions[i].PrescriptionText });
+                var med = context.Users.Where(x => x.Id == prescriptions[i].MedWorkerId).SingleOrDefault();
+
+                var dateToPass = $"{prescriptions[i].Date.Day}/{prescriptions[i].Date.Month}/{prescriptions[i].Date.Year}";
+
+                list.Add(new object[] { med.Name + " " + med.FamilyName, med.Email, pat.Email, dateToPass, prescriptions[i].PrescriptionText });
             }
 
             //for (int i = 0; i < prescriptions.Count; i++)

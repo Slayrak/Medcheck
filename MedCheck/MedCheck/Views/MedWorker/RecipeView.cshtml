@@ -1,0 +1,37 @@
+﻿@model MedCheck.Models.ViewModels.MedWorkerViewModel
+
+<div class="modal-header">
+    <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+        <div class="row justify-content-center">
+            <label class="col-lg-3 text-center">Prescription:</label>
+            <div class="col-7" align="center">
+                <textarea class="form-control" type="text" id="presc"></textarea>
+            </div>
+
+
+        </div>
+    </div>
+
+    @Html.Hidden("RedirectTo", Url.Action("MedWorkerProfile", "MedWorker"));
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-save="modal" id="send">Send</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#send").click(function () {
+        $.post('@Url.Action("Send", "MedWorker")',
+            {
+                text: $("#presc").val(),
+                patID: '@Model.patients[0].Id'
+            }, function (result) {
+                var url = $("#RedirectTo").val();
+                location.href = url;
+            }
+        )
+    })
+</script>

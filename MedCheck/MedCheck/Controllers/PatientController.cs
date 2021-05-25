@@ -289,12 +289,14 @@ namespace MedCheck.Controllers
 
                 if (req == null)
                 {
+                    var sender = _context.Users.Where(x => x.Id == SenderID).SingleOrDefault();
+
 
                     req = new Requests
                     {
                         Patient = _context.Users.Where(x => x.Id == patient).FirstOrDefault(),
                         ReceiverId = patient,
-                        SenderID = SenderID,
+                        SenderID = sender.UserFamilyID,
                         RequestStatus = true,
                     };
 

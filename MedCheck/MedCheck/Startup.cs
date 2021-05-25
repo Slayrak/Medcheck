@@ -44,8 +44,12 @@ namespace MedCheck
                 .AddRoles<IdentityRole>();
 
             services.AddAuthorization(options =>
-            options.AddPolicy("admin",
-                policy => policy.RequireClaim("Manager")));
+            {
+                options.AddPolicy("admin", policy => policy.RequireClaim("Manager"));
+                options.AddPolicy("MedWorker", policy => policy.RequireRole("MedWorker"));
+            }
+            );
+                
 
             services.AddDbContext<MedCheckContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MedCheckConnection")));

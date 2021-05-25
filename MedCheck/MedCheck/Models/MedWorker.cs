@@ -15,7 +15,5 @@ namespace MedCheck.Models
 
         public ICollection<Speciality> Specialities { get; set; }
         public ICollection<Hospital> Hospitals { get; set; }
-        public ICollection<Patient> Patients { get; set; }
-        public ICollection<Prescription> Prescription { get; set; }
     }
 }

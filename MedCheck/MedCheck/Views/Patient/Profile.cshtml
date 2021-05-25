@@ -61,7 +61,7 @@
 
 </style>
 
-<div class="row" style="height:600px; background-color: rgba(255,0,0,0.1);">
+<div class="row" style="height:600px; background-color: white;">
     <div class="d-inline col-12">
         <div class="media d-flex" @*style="flex-wrap:wrap"*@>
             <div class="ml-1 mr-2 border border-dark justify-content-center align-items-start" id="imageContainer" style="width:150px; height:150px; position:relative">
@@ -143,12 +143,12 @@
 
         <div class="container col-12 d-inline">
             <div class="row" style="height:50%">
-                <div class="border border-dark mt-1 col-3">
+                <div class="mt-1 col-3">
                     <div class="btn-group" role="group" aria-label="Basic example" style="width:100%">
                         <button type="button" class="btn btn-light btn-outline-dark">Notify a doctor</button>
                         <button type="button" class="btn btn-light btn-outline-dark">Make an appointment</button>
                     </div>
-                    <div class="border border-dark mt-1" style="padding-left:0px; width:100%">
+                    <div class="mt-1" style="padding-left:0px; width:100%">
                         <div class="btn-group col-12" role="group" aria-label="Basic example" style="padding-left:0px; padding-right:0px">
                             <button type="button" class="btn btn-light btn-outline-dark">EPC</button>
                             <button type="button" class="btn btn-light btn-outline-dark" data-toggle="modal" data-target="#showrecipes">Recipes</button>
@@ -157,7 +157,7 @@
                     </div>
                 </div>
 
-                <div id="graphsHere" class="col-7 d-flex ml-3 border border-dark">
+                <div id="graphsHere" class="col-7 d-flex ml-3">
                     @*@await Html.PartialAsync("~/Views/Patient/Graphs/PatientGraphs.cshtml", (string)ViewBag.GraphType)*@
                     @*<div id="test"></div>*@
                 </div>
@@ -176,34 +176,9 @@
 
         <div class="row">
             <div class="border border-dark col-1 mt-1 offset-9 justify-content-start">
-                <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#addStats">Add record</button>
+                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#addStats">Add record</button>
             </div>
         </div>
-
-        @*<div class="border border-dark ml-1 mt-1 col-3">
-            <div class="btn-group" role="group" aria-label="Basic example" style="">
-                <button type="button" class="btn btn-light btn-outline-dark">Notify a doctor</button>
-                <button type="button" class="btn btn-light btn-outline-dark">Make an appointment</button>
-            </div>
-        </div>
-        <div class="border border-dark ml-1 mt-1 col-1">
-            <button type="button" class="btn btn-light btn-outline-dark">EPC</button>
-        </div>
-
-        <div class="border border-dark ml-1 mt-5 mb-2 col-3">
-            Extras:
-            <div class="w-100"></div>
-            <div class="justify-content-start">
-                <div class="btn-group justify-content-around" role="group" aria-label="Extras" style="">
-                    <button type="button" class="btn btn-light btn-outline-dark mr-1">Maps</button>
-                    <button type="button" class="btn btn-light btn-outline-dark">Recipes History</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="border border-dark col-1 mt-5 offset-11 justify-content-start">
-            <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#addStats">Add record</button>
-        </div>*@
 
     </div>
 </div>

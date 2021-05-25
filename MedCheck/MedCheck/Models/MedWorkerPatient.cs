@@ -7,22 +7,17 @@ using System.Threading.Tasks;
 
 namespace MedCheck.Models
 {
-    public class Prescription
+    public class MedWorkerPatient
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long PrescriptionId { get; set; }
-
-        [Required]
-        public string PrescriptionText { get; set; }
-
-        [Required]
-        public DateTime Date { get; set; }
+        public long StatsId { get; set; }
 
         [Required]
         public string PatientId { get; set; }
 
         [Required]
         public string MedWorkerId { get; set; }
+
     }
 }

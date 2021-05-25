@@ -72,9 +72,9 @@ namespace MedCheck.Controllers
                             {
                                 return RedirectToAction("Profile", "Patient");
                             }
-                            else if(await _userManager.IsInRoleAsync(user, "Med Worker"))
+                            else if(await _userManager.IsInRoleAsync(user, "MedWorker"))
                             {
-                                return RedirectToAction("Index", "Home");
+                                return RedirectToAction("MedWorkerProfile", "MedWorker");
                             }
                             else if(await _userManager.IsInRoleAsync(user, "admin"))
                             {
