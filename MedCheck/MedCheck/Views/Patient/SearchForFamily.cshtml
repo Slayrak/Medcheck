@@ -1,0 +1,51 @@
+﻿@model MedCheck.Models.ViewModels.SendViewModel
+
+<div class="container d-inline">
+    <form action="~/Patient/SearchForFamily" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#searchedHere" id="form0" method="post" class="d-flex">
+
+        <div id="userData" class="border border-dark d-inline" style="width:100%">
+            @if(Model.patients != null)
+            {
+                <div class="d-flex" style="width:100%">
+                    <img style="width:10%; height:100%;" src="@Model.patients.ProfilePicture" alt="Generic placeholder image" id="miniProfileImage" accept="image/* "/>
+                    <div class="col-3 ml-1">
+                        <p>@Model.patients.Name</p>
+                        <p>@Model.patients.FamilyName</p>
+                        <p>@Model.patients.Email</p>
+                    </div>
+                    <div class="btn btn-primary mt-5 offset-5" id="sendRequest" style="height:10%">
+                        @Html.ActionLink("Send", "RequestWasSent", "Patient", new { SenderID = Model.patientID, patient = Model.patients.Id }, new { @style = "color:white" })
+                    </div>
+
+                    
+                </div>
+            }
+            else
+            {
+                <div>No results</div>
+            }
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+
+
+    @*var checkME = @Json.Serialize(Model);
+
+    alert(checkME);
+
+        $("#sendRequest").click(function () {
+
+        $.ajax({
+                url: '@Url.Action("RequestWasSent", "Patient")',
+            type: 'POST',
+            data: { status: true, patient: checkME}
+                }).done(function () {
+              alert('Added');
+           });
+    })*@
+
+
+</script>
+

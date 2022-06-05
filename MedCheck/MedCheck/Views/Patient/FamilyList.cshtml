@@ -1,0 +1,164 @@
+﻿@model MedCheck.Models.ViewModels.FamilyViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*<p>@User.Identity.Name</p>
+
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <input type="submit" value="Log out" />
+            </form>*@
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="Profile" asp-controller="Patient">Profile</a>
+                <div class="dropdown-divider"></div>
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="dropdown-item small" asp-action="Logout" asp-controller="Account" type="submit" value="Log out" />
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-dark btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-dark btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+
+<div class="container-fluid" id="FamilyListBody">
+    <ul class="nav nav-tabs" id="tabs">
+        <li class="active">
+            <a class="nav-link active" aria-current="page" href="#FamilyTab" data-toggle="tab">Family</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#SearchTab" data-toggle="tab">Search</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#RequestsTab" data-toggle="tab">Requests</a>
+        </li>
+    </ul>
+    <div id="tabsContent" class="tab-content">
+        <div class="tab-pane active" id="FamilyTab">
+            <div class="justify-content-end">
+                @if (Model.patient.Id != Model.patient.UserFamilyID)
+                {
+                <button type="button" class="btn-danger" style="margin-top:10px; margin-bottom:5px">
+                    @Html.ActionLink("Leave", "RemoveFromFamily", "Patient", new { currentUser = Model.patient.UserFamilyID, chosenUser = Model.patient.Id }, new { @style = "color:white" })
+                </button>
+                }
+            </div>
+            <div class="w-100"></div>
+            <ul style="list-style-type:none; padding-left:0px">
+                @foreach (var s in Model.patients)
+                {
+                      <li>
+                           <div class="d-flex border border-dark" style="width:100%">
+                               <img style="width:10%; height:10%;" src="@s.ProfilePicture" alt="Generic placeholder image" id="miniProfileImage" accept="image/* "/>
+                               <div class="col-3 ml-1">
+                                   <p>@s.Name</p>
+                                   <p>@s.FamilyName</p>
+                                   <p>@s.Email</p>
+                               </div>
+                               @if (Model.patient.Id == Model.patient.UserFamilyID)
+                               {
+                           <button type="button" class="btn-danger mt-5 offset-5" style="height:20%; width:20%">
+                               @Html.ActionLink("Remove", "RemoveFromFamily", "Patient", new { currentUser = Model.patient.Id, chosenUser = s.Id }, new { @style = "color:white" })
+                           </button>
+                               }
+
+                           </div>
+                      </li>
+                }
+
+            </ul>
+        </div>
+        <div class="tab-pane" id="SearchTab">
+            <div class="row justify-content-center" style="margin-top:25px">
+                    <div class="d-inline" align="center" style="height:10%">
+                        <input class="border border-dark" type="email" id="enteredEmail" value=exampleEmail@mail.com>
+                        <button class="btn-primary" type="button" id="passEmail">Search</button>
+                    </div>
+                <div class="w-100"></div>
+                <div id="searchedHere">
+
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="RequestsTab">
+            <div class="row justify-content-center" style="margin-top:25px">
+                <ul style="list-style-type:none">
+                    @for(var i = 0; i < Model.requests.Count; i++)
+                    {
+                        <li>
+                            <div class="d-flex border border-dark" style="width:100%">
+                                <img style="width:10%; height:10%;" src="@Model.requestSender[i].ProfilePicture" alt="Generic placeholder image" id="miniProfileImage" accept="image/* "/>
+                                <div class="col-3 ml-1">
+                                    <p>@Model.requestSender[i].Name</p>
+                                    <p>@Model.requestSender[i].FamilyName</p>
+                                    <p>@Model.requestSender[i].Email</p>
+                                </div>
+                                <div class="btn-group mt-5 offset-5" role="group" aria-label="Basic example" style="height:20%">
+                                    <button type="button" class="btn btn-primary">
+                                        @Html.ActionLink("Accept", "ChosenAnswer", "Patient", new { choice = true, currentUser = Model.patient.Id, chosenFamily = Model.requests[i].SenderID }, new { @style = "color:white" })
+                                    </button>
+                                    <button type="button" class="btn btn-danger">
+                                        @Html.ActionLink("Decline", "ChosenAnswer", "Patient", new { choice = false, currentUser = Model.patient.Id, chosenFamily = Model.requests[i].SenderID }, new { @style = "color:white" })
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var dataToPass;
+
+    $("#passEmail").click(function () {
+        if ($("#enteredEmail").val().length != 0) {
+            dataToPass = $("#enteredEmail").val();
+            @*$.ajax({
+                            url: '@Url.Action("SearchForFamily", "Patient")',
+                    type: 'POST',
+                    data: { email: dataToPass },
+                success: function (partialView) {
+                    alert("Success");
+                                $('#searchedHere').html(partialView);
+                                $('#searchedHere').show();
+                            }
+                        });*@
+            $('#searchedHere').load("SearchForFamily", {
+                email: dataToPass
+        });
+            @*$.ajax({
+                url: '@Url.Action("GetGraph", "Patient")',
+                type: 'POST',
+                data: { graphType: '@ViewBag.GraphType' },
+                success: function (partialView) {
+                    $('#graphsHere').html(partialView);
+                    $('#graphsHere').show();
+                }
+            });*@
+
+        } else {
+            alert("Enter valid data");
+        }
+
+
+    })
+
+
+</script>

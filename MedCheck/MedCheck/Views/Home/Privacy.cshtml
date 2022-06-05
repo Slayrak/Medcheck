@@ -2,5 +2,34 @@
     ViewData["Title"] = "Privacy Policy";
 }
 <h1>@ViewData["Title"]</h1>
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*<p>@User.Identity.Name</p>
+
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <input type="submit" value="Log out" />
+            </form>*@
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="Profile" asp-controller="Patient">Profile</a>
+                <div class="dropdown-divider"></div>
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="dropdown-item small" asp-action="Logout" asp-controller="Account" type="submit" value="Log out" />
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-dark btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-dark btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
 
 <p>Use this page to detail your site's privacy policy.</p>

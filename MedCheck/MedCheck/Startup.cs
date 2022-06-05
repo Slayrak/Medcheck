@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,9 +37,19 @@ namespace MedCheck
             {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireNonAlphanumeric = false;
+                options.SignIn.RequireConfirmedAccount = true;
             })
                 .AddEntityFrameworkStores<MedCheckContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddRoles<IdentityRole>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("admin", policy => policy.RequireClaim("Manager"));
+                options.AddPolicy("MedWorker", policy => policy.RequireRole("MedWorker"));
+            }
+            );
+                
 
             services.AddDbContext<MedCheckContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MedCheckConnection")));
@@ -66,6 +77,10 @@ namespace MedCheck
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            var cultureInfo = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             app.UseEndpoints(endpoints =>
             {

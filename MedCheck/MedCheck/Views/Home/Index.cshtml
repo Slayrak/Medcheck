@@ -1,20 +1,43 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@if (User.Identity.IsAuthenticated)
-{
-    <p>@User.Identity.Name</p>
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*<p>@User.Identity.Name</p>
 
-    <form method="post" asp-controller="Account" asp-action="Logout">
-        <input type="submit" value="Log out" />
-    </form>
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <input type="submit" value="Log out" />
+            </form>*@
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                @if (User.IsInRole("Patient") == true)
+                {
+                    <a class="dropdown-item small" asp-action="Profile" asp-controller="Patient">Profile</a>
+                }
+                else if (User.IsInRole("MedWorker") == true)
+                {
+                    <a class="dropdown-item small" asp-action="MedWorkerProfile" asp-controller="MedWorker">Profile</a>
+                }
+                <div class="dropdown-divider"></div>
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="dropdown-item small" asp-action="Logout" asp-controller="Account" type="submit" value="Log out" />
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-dark btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-dark btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
 }
-else
-{
-    <a asp-controller="Account" asp-action="Login">Log in</a>
-    <a asp-controller="Account" asp-action="Signup">Sign up!</a>
-}
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+

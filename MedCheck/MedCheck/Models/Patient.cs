@@ -28,9 +28,10 @@ namespace MedCheck.Models
     //    public string Salt { get; set; }
 
 // public long FamilyID { get; set; }
+        
 
         public ICollection<Hospital> Hospitals { get; set; }
         public ICollection<Stats> Stats { get; set; }
-        public ICollection<MedWorker> MedWorkers { get; set; }
+        public ICollection<Requests> Requests { get; set; }
     }
 }

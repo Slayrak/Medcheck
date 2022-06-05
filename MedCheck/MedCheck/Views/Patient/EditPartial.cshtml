@@ -1,0 +1,40 @@
+﻿@model MedCheck.Models.ViewModels.PatientViewModel
+
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+    </div>
+    <div class="modal-body">
+        <form asp-action="UpdateProfile" asp-controller="Patient" method="post">
+            <div class="form-group">
+                <div class="row justify-content-center">
+                    <label class="col-lg-3 text-center" asp-for="patient.Name">Name:</label>
+                    <div class="col-7" align="center">
+                        <input class="form-control w-100" type="text" asp-for="patient.Name" value="@Model.patient.Name">
+                    </div>
+                    <span asp-validation-for="patient.Name"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row justify-content-center">
+                    <label class="col-lg-3 text-center" asp-for="patient.FamilyName">Family Name:</label>
+                    <div class="col-7" align="center">
+                        <input class="form-control w-100" type="text" asp-for="patient.FamilyName" value="@Model.patient.FamilyName">
+                    </div>
+                    <span asp-validation-for="patient.FamilyName"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row justify-content-center">
+                    <label class="col-lg-3 text-center" asp-for="patient.BirthDate">Birth Date:</label>
+                    <div class="col-7" align="center">
+                        <input class="form-control w-100" type="datetime" asp-for="patient.BirthDate" value="@Model.patient.BirthDate">
+                    </div>
+                    <span asp-validation-for="patient.BirthDate"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" data-save="modal" id="save">Save</button>
+            </div>
+        </form>
+    </div>

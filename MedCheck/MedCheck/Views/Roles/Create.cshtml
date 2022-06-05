@@ -1,0 +1,44 @@
+﻿@model string
+
+@{
+    Layout = "_Layout";
+}
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*<p>@User.Identity.Name</p>
+
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <input type="submit" value="Log out" />
+            </form>*@
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="dropdown-item small" asp-action="Logout" asp-controller="Account" type="submit" value="Log out" />
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-dark btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-dark btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="name">New role</label>
+        <input name="name" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>

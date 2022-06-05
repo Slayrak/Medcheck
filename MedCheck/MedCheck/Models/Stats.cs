@@ -33,6 +33,5 @@ namespace MedCheck.Models
         public DateTime Date { get; set; }
 
         public Patient Patient { get; set; }
-
     }
 }

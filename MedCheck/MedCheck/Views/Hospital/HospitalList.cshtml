@@ -1,0 +1,52 @@
+﻿@model IEnumerable<MedCheck.Models.Hospital>
+
+@{
+    Layout = "_Layout";
+}
+
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*<p>@User.Identity.Name</p>
+
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <input type="submit" value="Log out" />
+            </form>*@
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="dropdown-item small" asp-action="Logout" asp-controller="Account" type="submit" value="Log out" />
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-dark btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-dark btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+<h2>List of Hospitals</h2>
+<table class="table">
+    @foreach (var hospital in Model)
+    {
+        <tr>
+            <td>@hospital.Name</td>
+            <td>
+                <form method="post" asp-action="Delete" asp-route-id="@hospital.HospitalId">
+                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-HospitalId="@hospital.HospitalId">Edit</a>
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+
+<a class="btn btn-sm btn-light border border-dark rounded" asp-action="Add">Add</a>

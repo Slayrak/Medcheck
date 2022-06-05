@@ -1,0 +1,201 @@
+﻿@model String
+
+<div class="container-fluid d-block col-12 justify-content-start p-0">
+    <form action="~/Patient/GetGraph" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#graphsHere" id="form0" method="post" class="justify-content-start d-inline container-fluid p-0" >
+
+        <div class="" style="width:100%; height:100%">
+            <div class="container-fluid d-flex col-10 p-0" style="height:90%; width:100%;">
+                <div id="currentgraph" class="border border-dark" style="width:100%; height:100%" />
+            </div>
+
+            <div class="btn-group-vertical btn-group-sm col-1" role="group" aria-label="Basic example" style="height:20%" id="zoomInzoomOut">
+                <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="zoomIn">+</button>
+                <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="zoomOut">-</button>
+            </div>
+        </div>
+        
+        <div class="" style="width:50%; margin-left:8%">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example" style="height:5%; width:20%" id="zoomInzoomOut">
+                <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveLeft"><</button>
+                <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveRight">></button>
+            </div>
+        </div>
+        
+
+        @*<div class="btn-group col-2" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-secondary">+</button>
+            <button type="button" class="btn btn-secondary">-</button>
+        </div>*@
+        @*<div id="test">@Model</div>*@
+    </form>
+    @*<div class="row">
+        <div class="btn-group btn-group-sm col-1" role="group" aria-label="Basic example" style="height:10%" id="zoomInzoomOut">
+            <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveLeft"><</button>
+            <button type="button" class="btn btn-secondary rounded-0 btn-light btn-outline-dark" id="moveRight">></button>
+        </div>
+    </div>*@
+
+    @*<div class="btn-group col-2" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-secondary">+</button>
+            <button type="button" class="btn btn-secondary">-</button>
+        </div>*@
+
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" language="JavaScript">
+        // Load the Visualization API and the corechart package.
+    google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+    $("#zoomOut").prop("disabled", true);
+    $("#zoomIn").prop("disabled", true);
+    var entries = 0;
+    var miniEntries = 0;
+    var zoom = 0;
+    @*function checkMe() {
+        $("#test").html(@Model);
+    };*@
+
+    var currentDateOnGraph;
+
+      function drawChart() {
+          $.get('@Url.Action("GetSpecifiedGraph", "Patient")',
+              {
+                  graphType: @Model,
+                  zoomType: zoom,
+                  showEntries: entries
+              },
+              function (jsonData) {
+                  var data = google.visualization.arrayToDataTable(jsonData, false);
+                  //data.addColumn({ 'type': 'string', 'role': 'style' })
+
+                  //var i;
+                  //for (i = 0; i < data.getNumberOfRows(); i++) {
+                  //    data.setValue(i, 2, 'point { size: 18;}');
+                  //    alert('The user selected ' + data.getValue(i, 0) +" " + data.getValue(i, 1) + data.getValue(i, 2));
+                  //}
+
+                  if (entries == 0) {
+                      $("#moveRight").prop("disabled", true);
+                  } else {
+                      $("#moveRight").prop("disabled", false);
+                  }
+
+                  if ((entries + 1) * 10 >= data.getNumberOfRows()) {
+                      $("#moveLeft").prop("disabled", true);
+                  } else {
+                      $("#moveLeft").prop("disabled", false);
+                  }
+
+              var option = {
+                  title: @Model,
+                  width: '100%',
+                  pointSize: 7,
+              };
+                  chart = new google.visualization.LineChart(document.getElementById('currentgraph'));
+                  chart.draw(data, option);
+
+                  google.visualization.events.addListener(chart, 'select', function (e) {
+                      var selectedItem = chart.getSelection()[0];
+
+                      if (selectedItem) {
+                          var value = data.getValue(selectedItem.row, 0);
+
+                          $("#zoomIn").prop("disabled", false);
+                          currentDateOnGraph = value;
+                      }
+                  });
+
+                  google.visualization.events.addListener(chart, 'click', function (e) {
+                      $("#zoomIn").prop("disabled", true);
+                  });
+              })
+    };
+
+    function drawMiniChart() {
+        $.get('@Url.Action("GetSpecifiedMiniGraph", "Patient")',
+              {
+                  graphType: @Model,
+                  zoomType: zoom,
+                  showEntries: miniEntries,
+                  graphDate: currentDateOnGraph
+              },
+              function (jsonData) {
+                  var data = google.visualization.arrayToDataTable(jsonData, false);
+
+                  if (miniEntries == 0) {
+                      $("#moveRight").prop("disabled", true);
+                  } else {
+                      $("#moveRight").prop("disabled", false);
+                  }
+
+                  if ((miniEntries + 1) * 10 > data.getNumberOfRows()) {
+                      $("#moveLeft").prop("disabled", true);
+                  } else {
+                      $("#moveLeft").prop("disabled", false);
+                  }
+
+
+              var option = {
+                  title: @Model,
+                  pointSize: 7
+              };
+                  chart = new google.visualization.LineChart(document.getElementById('currentgraph'));
+                  chart.draw(data, option);
+
+                  //google.visualization.events.addListener(chart, 'select', function (e) {
+                  //    var selectedItem = chart.getSelection()[0];
+
+                  //    if (selectedItem) {
+                  //        var value = data.getValue(selectedItem.row, 0);
+
+                  //        currentDateOnGraph = value;
+                  //        //alert('The user selected ' + value);
+                  //    }
+                  //});
+              })
+    };
+
+
+    $("#zoomIn").click(function () {
+        $("#zoomOut").prop("disabled", false);
+        $("#zoomIn").prop("disabled", true);
+        zoom = 1
+        drawMiniChart();
+
+
+    });
+
+    $("#zoomOut").click(function () {
+        zoom = 0
+        miniEntries = 0
+        $("#zoomOut").prop("disabled", true);
+        drawChart();
+    });
+
+    $("#moveRight").click(function () {
+        if (zoom == 0) {
+            entries -= 1;
+            drawChart();
+        }
+        else {
+            miniEntries -= 1;
+            drawMiniChart();
+        }
+
+    });
+
+    $("#moveLeft").click(function () {
+        if (zoom == 0) {
+            entries += 1;
+            drawChart();
+        }
+        else {
+            miniEntries += 1;
+            drawMiniChart();
+        }
+
+    });
+
+</script>

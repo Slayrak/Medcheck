@@ -1,0 +1,382 @@
+﻿@model MedCheck.Models.ViewModels.MedWorkerViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+@{
+    ViewBag.GraphType = "Temperature";
+}
+
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*<p>@User.Identity.Name</p>
+
+            <form method="post" asp-controller="Account" asp-action="Logout">
+                <input type="submit" value="Log out" />
+            </form>*@
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="MedWorkerProfile" asp-controller="MedWorker">Profile</a>
+                <div class="dropdown-divider"></div>
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="dropdown-item small" asp-action="Logout" asp-controller="Account" type="submit" value="Log out" />
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-dark btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-dark btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+<style type="text/css">
+
+    #imgButtonGroup {
+        opacity: 0;
+        z-index: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+    }
+
+    /*#uploadedFile {
+        opacity: 0;
+        z-index: 2;
+        position: absolute;
+    }*/
+
+    #imageContainer:hover #imgButtonGroup {
+        opacity: 1;
+    }
+</style>
+
+<div class="row" style="height:600px; background-color: white;">
+    <div class="d-inline col-12">
+        <div class="media d-flex" @*style="flex-wrap:wrap"*@>
+            <div class="ml-1 mr-2 border border-dark justify-content-center align-items-start" id="imageContainer" style="width:150px; height:150px; position:relative">
+                <form asp-action="AddFile" asp-controller="MedWorker" method="post" runat="server" EncType="multipart/form-data" style="position:relative; height:100%">
+                    <img style="width:150px; height:150px;" src="@Model.medWorker.ProfilePicture" alt="Generic placeholder image" id="profileImage" onclick="pro1()" accept="image/* ">
+                    <input type="file" name="uploadedFile" style="width:0%; height:0%;" id="fileUploader" /><br>
+                    <div class="btn-group justify-content-end" role="group" aria-label="Family and Edit" id="imgButtonGroup" @*style="position:absolute; top:60px botto"*@>
+                        <input class="button btn-success border border-dark" id="imageButtonClick" type="submit" value="Upload" />
+                        <input class="button btn-danger border border-dark" type="button" id="discardImageButtonClick" value="Discard" />
+                    </div>
+
+
+                    @*<input class="button" id="imageButtonClick" type="submit" value="Upload" />
+        <input class="button" id="discardImageButtonClick" type="submit" value="Upload" />*@
+                </form>
+            </div>
+
+            @*<div class="media-body col-3">
+                <p>@Model.patient.Name</p>
+                <p>@Model.patient.FamilyName</p>
+                <p>@Model.patient.Email</p>
+            </div>*@
+
+            <div class="container col-7 d-flex h-100" style="flex-wrap:wrap">
+                @*<div class="row justify-content-end">
+                        <div class="btn-group col-4" role="group" aria-label="Family and Edit">
+                            <button type="button" class="btn btn-light border border-dark">Family</button>
+                            <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#showmodal">Edit Profile</button>
+                        </div>
+                    </div>*@
+
+                <div class="container row justify-content-end mb-0 h-50">
+                    <div class="btn-group justify-content-end col-12" role="group" aria-label="Family and Edit" @*style="position:absolute; top:60px botto"*@>
+                        <button type="button" class="btn btn-light border border-dark col-2 btn-outline-dark" data-toggle="modal" data-target="#showmodal">Edit Profile</button>
+                    </div>
+                </div>
+
+                <div id="showmodal" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            @await Html.PartialAsync("EditMed", Model);
+                        </div> @*/.modal-content*@ 
+                    </div> @*/.modal-dialog*@ 
+                </div> @*/.modal*@ 
+
+                <!--<div id="addStats" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            
+                        </div>--><!-- /.modal-content -->
+                    <!--</div>--><!-- /.modal-dialog -->
+                <!--</div>--><!-- /.modal -->
+                @*<div class="col-1 ml-1 mr-2 d-inline">
+                        <button type="button" class="btn btn-light border border-dark">Family</button>
+                    </div>
+                    <div class="ml-2 d-inline">
+                        <button type="button" style="width: 250px" class="btn btn-light border border-dark">+ Family member</button>
+                    </div>
+
+                    <div class="ml-2 d-inline offset-2">
+                        <button type="button" style="width: 50px" class="btn btn-light border border-dark">Edit</button>
+                    </div>*@
+                <!--<div class="container row align-items-end mb-0 h-75 d-inline-block mt-5">
+                    <div class="btn-group align-items-end col-7" role="group" aria-label="Basic example"--> @*style="position:absolute; top:60px botto"*@ <!--id="StatsButtonGroup">
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1" id="temp">Temperature</button>
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1" id="pressure">Pressure</button>
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1" id="oxygen">Oxygen Level</button>
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1" id="pulse">Pulse</button>
+                    </div>
+                </div>-->
+
+            </div>
+
+
+
+
+        </div>
+
+        <div class="container col-12 d-inline">
+            <div class="row" style="height:50%">
+                <div class="mt-1 col-3">
+                    <div class="btn-group" role="group" aria-label="Basic example" style="width:100%">
+                        <button type="button" class="btn btn-light btn-outline-dark" data-toggle="modal" data-target="#showpatients">Patient List</button>
+                        @*<div class="border border-dark mt-1" style="padding-left:0px; width:100%">
+                <div class="btn-group col-12" role="group" aria-label="Basic example" style="padding-left:0px; padding-right:0px">
+                    <button type="button" class="btn btn-light btn-outline-dark">EPC</button>
+                    <button type="button" class="btn btn-light btn-outline-dark" data-toggle="modal" data-target="#showrecipes">Recipes</button>
+                </div>*@
+
+                    </div>
+                </div>
+
+                <div id="showpatients" class="modal fade" tabindex="-1" role="dialog" style="margin:auto;">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            @await Html.PartialAsync("PatientList", Model);
+                        </div> @*/.modal-content*@
+                    </div> @*/.modal-dialog*@
+                </div> @*/.modal*@
+
+                <div id="graphsHere" class="col-7 d-flex ml-3 border border-dark" style="flex-wrap:wrap">
+                    <div class="justify-content-start d-flex border border-dark" style="height:20%; width:100%; margin-top:15px">
+                        <label class="col-2">Name Surname:</label>
+                        <div class="col-8 justify-content-start ">
+                            @Model.medWorker.Name @Model.medWorker.FamilyName;
+                        </div>
+                    </div>
+                    <div class="justify-content-start d-flex border border-dark" style="height:20%; width:100%">
+                        <label class="col-2">Email:</label>
+                        <div class="col-8 justify-content-start">
+                            @Model.medWorker.Email;
+                        </div>
+                    </div>
+                    <div class="justify-content-start d-flex border border-dark" style="height:20%; width:100%">
+                        <label class="col-2">Birth Date:</label>
+                        <div class="col-8 justify-content-start">
+                            @Model.medWorker.BirthDate;
+                        </div>
+                    </div>
+                    <div class="justify-content-start d-flex border border-dark" style="height:20%; width:100%">
+                        <label class="col-2">Price:</label>
+                        <div class="col-8 justify-content-start">
+                            @Model.medWorker.Price;
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!--<div id="showpatients" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    await Html.PartialAsync("RecipesView", Model);
+                </div>--><!-- /.modal-content -->
+            <!--</div>--><!-- /.modal-dialog -->
+        <!--</div>--><!-- /.modal -->
+
+
+
+        @*<div class="row">
+            <div class="border border-dark col-1 mt-1 offset-9 justify-content-start">
+                <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#addStats">Add record</button>
+            </div>
+        </div>*@
+
+        @*<div class="border border-dark ml-1 mt-1 col-3">
+                <div class="btn-group" role="group" aria-label="Basic example" style="">
+                    <button type="button" class="btn btn-light btn-outline-dark">Notify a doctor</button>
+                    <button type="button" class="btn btn-light btn-outline-dark">Make an appointment</button>
+                </div>
+            </div>
+            <div class="border border-dark ml-1 mt-1 col-1">
+                <button type="button" class="btn btn-light btn-outline-dark">EPC</button>
+            </div>
+
+            <div class="border border-dark ml-1 mt-5 mb-2 col-3">
+                Extras:
+                <div class="w-100"></div>
+                <div class="justify-content-start">
+                    <div class="btn-group justify-content-around" role="group" aria-label="Extras" style="">
+                        <button type="button" class="btn btn-light btn-outline-dark mr-1">Maps</button>
+                        <button type="button" class="btn btn-light btn-outline-dark">Recipes History</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-dark col-1 mt-5 offset-11 justify-content-start">
+                <button type="button" class="btn btn-light border border-dark" data-toggle="modal" data-target="#addStats">Add record</button>
+            </div>*@
+
+    </div>
+</div>
+
+@*<div class="media" style="width: 300px; height: 300px;">
+        <img class="mr-3" src=".../64x64" alt="Generic placeholder image">
+        <div class="media-body">
+            <h5 class="mt-0">Media heading</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+        </div>
+    </div>*@
+
+@*<div class="row" style="height: 100px; background-color: rgba(255,0,0,0.1);">
+        <div class="mh-100" style="width: 100px; height: 200px; background-color: rgba(0,0,255,0.1);">Max-height 100%</div>
+    </div>*@
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+    @*$('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*@
+
+    //$('#profileImage').click(function () {
+    //    alert("Hello");
+    //});
+
+    $("#fileUploader").css("visibility", "hidden");
+
+    function pro1() {
+        document.getElementById("fileUploader").click();
+    }
+
+    if (document.getElementById("fileUploader").files.length == 0) {
+        $("#imageButtonClick").prop("disabled", true);
+        $("#discardImageButtonClick").prop("disabled", true);
+        $("#imageButtonClick").css("visibility", "hidden");
+        $("#discardImageButtonClick").css("visibility", "hidden");
+    }
+
+    document.getElementById("fileUploader").addEventListener('change', function () {
+
+        if (document.getElementById("fileUploader").files.length == 0) {
+            $("#imageButtonClick").prop("disabled", true);
+            $("#discardImageButtonClick").prop("disabled", true);
+            $("#imageButtonClick").css("visibility", "hidden");
+            $("#discardImageButtonClick").css("visibility", "hidden");
+        } else {
+
+            //document.getElementById("profileImage").src = $("#fileUploader").val();
+
+            var input = this;
+            var url = $(this).val();
+            var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+            if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#profileImage').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+
+                $("#imageButtonClick").prop("disabled", false);
+                $("#discardImageButtonClick").prop("disabled", false);
+                $("#imageButtonClick").css("visibility", "visible");
+                $("#discardImageButtonClick").css("visibility", "visible");
+            }
+            else {
+                alert("Choose file with acceptable extention")
+            }
+
+
+        }
+    });
+
+    $("#discardImageButtonClick").click(function () {
+        $("#imageButtonClick").prop("disabled", true);
+        $("#discardImageButtonClick").prop("disabled", true);
+        $("#imageButtonClick").css("visibility", "hidden");
+        $("#discardImageButtonClick").css("visibility", "hidden");
+        $("#fileUploader").val('');
+
+
+
+        document.getElementById("profileImage").src = "@Model.medWorker.ProfilePicture";
+    })
+
+    @*$("#StatsButtonGroup button").click(function () {
+        var data = $(this).text();
+        if (data == "Temperature") {
+            @ViewBag.GraphType = "Temperature";
+
+            $.ajax({
+                url: '@Url.Action("GetGraph", "Patient")',
+                type: 'POST',
+                data: { graphType: '@ViewBag.GraphType' },
+                success: function (partialView) {
+                    $('#graphsHere').html(partialView);
+                    $('#graphsHere').show();
+                }
+            });
+            $('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });
+        }
+        else if (data == "Pressure") {
+            @ViewBag.GraphType = "Pressure";
+            $.ajax({
+                url: '@Url.Action("GetGraph", "Patient")',
+                type: 'POST',
+                data: { graphType: '@ViewBag.GraphType' },
+                success: function (partialView) {
+                    $('#graphsHere').html(partialView);
+                    $('#graphsHere').show();
+                }
+            });
+            $('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });
+        }
+        else if (data == "Oxygen Level") {
+            @ViewBag.GraphType = "Oxygen";
+
+            $.ajax({
+                url: '@Url.Action("GetGraph", "Patient")',
+                type: 'POST',
+                data: { graphType: '@ViewBag.GraphType' },
+                success: function (partialView) {
+                    $('#graphsHere').html(partialView);
+                    $('#graphsHere').show();
+                }
+            });
+            $('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });*
+        }
+        else if (data == "Pulse") {
+            @ViewBag.GraphType = "Pulse";
+
+            $.ajax({
+                url: '@Url.Action("GetGraph", "Patient")',
+                type: 'POST',
+                data: { graphType: '@ViewBag.GraphType' },
+                success: function (partialView) {
+                    $('#graphsHere').html(partialView);
+                    $('#graphsHere').show();
+                }
+            });
+            $('#graphsHere').load("GetGraph", { graphType: @ViewBag.GraphType });
+            $('#test').text(@ViewBag.GraphType)
+        }
+
+    })*@
+
+
+
+</script>

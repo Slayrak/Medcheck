@@ -28,7 +28,10 @@ namespace MedCheck.Models
         [Required]
         public string Name { get; set; }
 
-        public byte[] ProfilePicture { get; set; }
+        [Required]
+        public bool IsGovernment { get; set; }
+
+        public string ProfilePicture { get; set; }
 
         public ICollection<MedWorker> MedWorkers { get; set; }
     }
